@@ -1,104 +1,108 @@
-<div class="ai-chat-wrapper">
-    <div class="ai-pulse-ring"></div>
-    <div class="ai-label">Ask AI Assistant</div>
+<div class="tji-ai-wrapper">
+    <div class="tji-ai-pulse-ring"></div>
     
-    <button type="button" class="ai-wow-btn" id="tji-ai-trigger" aria-label="Open AI Chat">
-        <svg viewBox="0 0 24 24" class="ai-svg-icon">
-            <path d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14V22H3V14A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A1.5,1.5 0 0,0 6,14.5A1.5,1.5 0 0,0 7.5,16A1.5,1.5 0 0,0 9,14.5A1.5,1.5 0 0,0 7.5,13M16.5,13A1.5,1.5 0 0,0 15,14.5A1.5,1.5 0 0,0 16.5,16A1.5,1.5 0 0,0 18,14.5A1.5,1.5 0 0,0 16.5,13M12,17C10.9,17 10,17.9 10,19H14C14,17.9 13.1,17 12,17Z" />
+    <a href="YOUR_AI_LINK_HERE" class="tji-ai-btn">
+        <svg viewBox="0 0 100 100" class="tji-ai-icon" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="28" cy="32" r="4.5" fill="white"/>
+            <line x1="28" x2="42" y1="32" y2="48" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            
+            <path d="M50 42c-15 0-27 12-27 27s12 27 27 27 27-12 27-27-12-27-27-27z" fill="white"/>
+            
+            <path d="M32 65c0-4 3-8 8-8h20c5 0 8 4 8 8v5c0 4-3 8-8 8H40c-5 0-8-4-8-8v-5z" fill="#1a1f36"/>
+            
+            <path d="M40 68c2-2 5-2 7 0M53 68c2-2 5-2 7 0" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+            
+            <path d="M44 85c0 3 3 6 6 6s6-3 6-6" stroke="#1a1f36" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            
+            <path d="M64 28h18c3 0 5 2 5 5v12c0 3-2 5-5 5h-4l-1 6-5-6h-8c-3 0-5-2-5-5V33c0-3 2-5 5-5z" fill="white"/>
+            
+            <line x1="70" y1="35" x2="82" y2="35" stroke="#1a1f36" stroke-width="2" stroke-linecap="round"/>
+            <line x1="70" y1="40" x2="78" y2="40" stroke="#1a1f36" stroke-width="2" stroke-linecap="round"/>
         </svg>
-    </button>
+    </a>
+
+    <div class="tji-ai-label">Chat with AI</div>
 </div>
 
-<script>
-document.getElementById('tji-ai-trigger').addEventListener('click', function() {
-    // --- FUNCTIONALITY SECTION ---
-    // If you use a specific chatbot, replace the alert below with its open command.
-    // Example for Chatbase: window.chatbase("open")
-    // Example for Tidio: tidioChatApi.open()
-    
-    alert("AI Chatbot Opening..."); 
-    
-    // Replace the alert above with your actual chatbot logic!
-});
-</script>
-
 <style>
-    .ai-chat-wrapper {
+    .tji-ai-wrapper {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
+        bottom: 30px; /* Mirroring WA bottom margin */
+        left: 30px;   /* Anchored to bottom left */
         z-index: 999999;
         display: flex;
         align-items: center;
-        justify-content: center;
+        flex-direction: row; /* Label expands to the RIGHT */
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
-    .ai-wow-btn {
+    /* AI Button mirroring your WA button style */
+    .tji-ai-btn {
         width: 65px;
         height: 65px;
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #1a1f36 0%, #3b4261 100%);
         border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 30px rgba(48, 43, 99, 0.5);
-        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(26, 31, 54, 0.4);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         z-index: 10;
-        padding: 0;
     }
 
-    .ai-svg-icon {
-        width: 36px;
-        height: 36px;
-        fill: #ffffff;
+    .tji-ai-icon {
+        width: 45px;
+        transition: transform 0.3s ease;
     }
 
-    .ai-wow-btn:hover {
-        transform: scale(1.15) rotate(10deg);
-        box-shadow: 0 15px 40px rgba(48, 43, 99, 0.7);
-    }
-
-    .ai-label {
-        position: absolute;
-        right: 85px;
-        background: #1a1a1a;
-        color: #fff;
-        padding: 8px 18px;
-        border-radius: 30px;
-        font-family: sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        white-space: nowrap;
+    /* Label sliding out to the RIGHT */
+    .tji-ai-label {
+        background: white;
+        padding: 8px 16px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-left: 15px;
+        font-weight: 600;
+        color: #333;
         opacity: 0;
-        transform: translateX(20px);
+        transform: translateX(-20px);
         transition: all 0.3s ease;
         pointer-events: none;
+        white-space: nowrap;
     }
 
-    .ai-chat-wrapper:hover .ai-label {
+    .tji-ai-wrapper:hover .tji-ai-label {
         opacity: 1;
         transform: translateX(0);
     }
 
-    .ai-pulse-ring {
-        position: absolute;
-        width: 65px;
-        height: 65px;
-        background: #302b63;
-        border-radius: 50%;
-        z-index: 5;
-        animation: ai-pulse-motion 2s infinite;
+    .tji-ai-wrapper:hover .tji-ai-btn {
+        transform: scale(1.1) rotate(-5deg); /* Counter-rotation to WA button */
+        box-shadow: 0 15px 35px rgba(26, 31, 54, 0.5);
     }
 
-    @keyframes ai-pulse-motion {
-        0% { transform: scale(1); opacity: 0.6; }
+    /* Pulse Effect mirroring WA */
+    .tji-ai-pulse-ring {
+        position: absolute;
+        left: 0;
+        width: 65px;
+        height: 65px;
+        background: #1a1f36;
+        border-radius: 50%;
+        z-index: 5;
+        animation: tji-ai-pulse 2s infinite;
+    }
+
+    @keyframes tji-ai-pulse {
+        0% { transform: scale(1); opacity: 0.7; }
         100% { transform: scale(1.8); opacity: 0; }
     }
 
+    /* Mobile Responsive Mirroring */
     @media (max-width: 768px) {
-        .ai-label { display: none; }
+        .tji-ai-label { display: none; }
+        .tji-ai-wrapper { bottom: 20px; left: 20px; }
+        .tji-ai-btn, .tji-ai-pulse-ring { width: 55px; height: 55px; }
     }
 </style>
