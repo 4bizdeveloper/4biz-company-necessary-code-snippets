@@ -1,0 +1,76 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+<style>
+  /* Base dark theme to match Cyberr.ai */
+  body {
+    background-color: #020617; /* Deepest blue/black */
+    color: #ffffff;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* The Background Layer */
+  #cyber-bg-plugin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Stays at the very back */
+  }
+
+  /* The Glowing Gradient Overlay (Matches the Cyberr 'Aura') */
+  .cyber-glow-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(2, 6, 23, 0.8) 80%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Optional: Glassmorphism effect for your content cards */
+  .cyber-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+  }
+</style>
+
+<div id="cyber-bg-plugin"></div>
+<div class="cyber-glow-overlay"></div>
+
+<script>
+  (function() {
+    function initCyberBackground() {
+      // Initialize the Vanta "Net" effect
+      VANTA.NET({
+        el: "#cyber-bg-plugin",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x3b82f6,           /* Cyber Blue (Tailwind Blue-500) */
+        backgroundColor: 0x020617,  /* Background color matches body */
+        points: 10.00,             /* Density of dots */
+        maxDistance: 20.00,        /* Line connectivity distance */
+        spacing: 16.00             /* Spacing between nodes */
+      });
+    }
+
+    // Load after DOM is ready
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      initCyberBackground();
+    } else {
+      document.addEventListener('DOMContentLoaded', initCyberBackground);
+    }
+  })();
+</script>

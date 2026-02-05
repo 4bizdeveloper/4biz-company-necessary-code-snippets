@@ -1,0 +1,107 @@
+<canvas id="tech-bg"></canvas>
+
+<style>
+  #tech-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Sits behind your content */
+    background: #000500; /* Deep tech black */
+    pointer-events: none; /* Allows clicking through to buttons/links */
+  }
+</style>
+
+<script>
+const canvas = document.getElementById('tech-bg');
+const ctx = canvas.getContext('2d');
+
+let particles = [];
+const mouse = { x: null, y: null, radius: 100 };
+
+// Resize handler
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  init();
+});
+
+window.addEventListener('mousemove', (e) => {
+  mouse.x = e.x;
+  mouse.y = e.y;
+});
+
+class Particle {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.baseX = x;
+    this.baseY = y;
+    this.size = 14;
+    this.text = Math.random() > 0.5 ? '1' : '0';
+    this.density = (Math.random() * 30) + 1;
+    this.opacity = Math.random() * 0.5 + 0.1;
+  }
+
+  draw() {
+    ctx.fillStyle = `rgba(0, 255, 70, ${this.opacity})`;
+    ctx.font = this.size + 'px monospace';
+    ctx.fillText(this.text, this.x, this.y);
+  }
+
+  update() {
+    // Calculate distance between mouse and particle
+    let dx = mouse.x - this.x;
+    let dy = mouse.y - this.y;
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    
+    let forceDirectionX = dx / distance;
+    let forceDirectionY = dy / distance;
+    let maxDistance = mouse.radius;
+    let force = (maxDistance - distance) / maxDistance;
+    let directionX = forceDirectionX * force * this.density;
+    let directionY = forceDirectionY * force * this.density;
+
+    if (distance < mouse.radius) {
+      this.x -= directionX;
+      this.y -= directionY;
+    } else {
+      // Slow return to original position
+      if (this.x !== this.baseX) {
+        let dx = this.x - this.baseX;
+        this.x -= dx / 40; // High divisor = slower movement
+      }
+      if (this.y !== this.baseY) {
+        let dy = this.y - this.baseY;
+        this.y -= dy / 40;
+      }
+    }
+  }
+}
+
+function init() {
+  particles = [];
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  // Create a grid of binary numbers
+  for (let y = 0; y < canvas.height; y += 25) {
+    for (let x = 0; x < canvas.width; x += 25) {
+      particles.push(new Particle(x, y));
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particles.length; i++) {
+    particles[i].draw();
+    particles[i].update();
+  }
+  requestAnimationFrame(animate);
+}
+
+init();
+animate();
+</script>
