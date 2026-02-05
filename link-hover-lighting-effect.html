@@ -1,0 +1,60 @@
+<style>
+  /* Base setup for all links and buttons */
+  a, button, .btn, input[type="submit"] {
+    position: relative !important;
+    isolation: isolate !important;
+  }
+
+  /* The Ultra-Soft Fluorescent Glow */
+  a::before, button::before, .btn::before, input[type="submit"]::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 500px !important;
+    height: 500px !important;
+    
+    top: calc(var(--y, 0) * 1px - 250px) !important;
+    left: calc(var(--x, 0) * 1px - 250px) !important;
+    
+    /* Reduced to 15% opacity at the core for maximum comfort */
+    background: radial-gradient(
+      circle, 
+      rgba(0, 255, 136, 0.15) 0%,   /* Very soft center */
+      rgba(0, 255, 100, 0.04) 45%,  /* Dissipating glow */
+      transparent 80%
+    ) !important;
+    
+    border-radius: 50% !important;
+    filter: blur(65px) !important; /* Maximum blur for a "cloudy" effect */
+    opacity: 0 !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+    
+    mix-blend-mode: screen !important;
+    transition: opacity 0.7s ease-in-out !important;
+  }
+
+  /* Smooth reveal on hover */
+  a:hover::before, button:hover::before, .btn:hover::before, input[type="submit"]:hover::before {
+    opacity: 1 !important;
+  }
+
+  /* Minimal element depth */
+  a:hover, button:hover {
+    filter: drop-shadow(0 0 5px rgba(0, 255, 136, 0.1)) !important;
+    transition: filter 0.4s ease !important;
+  }
+</style>
+
+<script>
+  (function() {
+    window.addEventListener('mousemove', (e) => {
+      const target = e.target.closest('a, button, .btn, input[type="submit"]');
+      
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        target.style.setProperty('--x', e.clientX - rect.left);
+        target.style.setProperty('--y', e.clientY - rect.top);
+      }
+    });
+  })();
+</script>
