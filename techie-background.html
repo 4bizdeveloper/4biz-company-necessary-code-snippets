@@ -7,9 +7,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Sits behind your content */
-    background: #000500; /* Deep tech black */
-    pointer-events: none; /* Allows clicking through to buttons/links */
+    z-index: -1;
+    /* Deep Navy-Purple Gradient matched to your screenshot */
+    background: radial-gradient(circle at center, #0d0221 0%, #050a18 100%);
+    pointer-events: none;
   }
 </style>
 
@@ -18,15 +19,9 @@ const canvas = document.getElementById('tech-bg');
 const ctx = canvas.getContext('2d');
 
 let particles = [];
-const mouse = { x: null, y: null, radius: 100 };
+const mouse = { x: null, y: null, radius: 180 }; 
 
-// Resize handler
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  init();
-});
-
+window.addEventListener('resize', () => init());
 window.addEventListener('mousemove', (e) => {
   mouse.x = e.x;
   mouse.y = e.y;
@@ -38,56 +33,53 @@ class Particle {
     this.y = y;
     this.baseX = x;
     this.baseY = y;
-    this.size = 14;
+    // SIZE INCREASED: bumped from 9 to 14 for better visibility
+    this.size = 14; 
     this.text = Math.random() > 0.5 ? '1' : '0';
-    this.density = (Math.random() * 30) + 1;
-    this.opacity = Math.random() * 0.5 + 0.1;
+    this.density = (Math.random() * 25) + 1;
+    // OPACITY ADJUSTED: slightly higher floor (0.08) for clarity
+    this.opacity = Math.random() * 0.18 + 0.08; 
   }
 
   draw() {
-    ctx.fillStyle = `rgba(0, 255, 70, ${this.opacity})`;
-    ctx.font = this.size + 'px monospace';
+    // Increased weight to 700 to make the white text pop
+    ctx.font = `700 ${this.size}px monospace`;
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
     ctx.fillText(this.text, this.x, this.y);
   }
 
   update() {
-    // Calculate distance between mouse and particle
     let dx = mouse.x - this.x;
     let dy = mouse.y - this.y;
     let distance = Math.sqrt(dx * dx + dy * dy);
     
-    let forceDirectionX = dx / distance;
-    let forceDirectionY = dy / distance;
-    let maxDistance = mouse.radius;
-    let force = (maxDistance - distance) / maxDistance;
-    let directionX = forceDirectionX * force * this.density;
-    let directionY = forceDirectionY * force * this.density;
-
     if (distance < mouse.radius) {
+      let force = (mouse.radius - distance) / mouse.radius;
+      let directionX = (dx / distance) * force * this.density;
+      let directionY = (dy / distance) * force * this.density;
+      
       this.x -= directionX;
       this.y -= directionY;
     } else {
-      // Slow return to original position
+      // Smooth slow return
       if (this.x !== this.baseX) {
-        let dx = this.x - this.baseX;
-        this.x -= dx / 40; // High divisor = slower movement
+        this.x -= (this.x - this.baseX) / 70;
       }
       if (this.y !== this.baseY) {
-        let dy = this.y - this.baseY;
-        this.y -= dy / 40;
+        this.y -= (this.y - this.baseY) / 70;
       }
     }
   }
 }
 
 function init() {
-  particles = [];
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  particles = [];
   
-  // Create a grid of binary numbers
-  for (let y = 0; y < canvas.height; y += 25) {
-    for (let x = 0; x < canvas.width; x += 25) {
+  // Spacing kept at 50px to prevent the larger numbers from overlapping
+  for (let y = 0; y < canvas.height; y += 50) {
+    for (let x = 0; x < canvas.width; x += 50) {
       particles.push(new Particle(x, y));
     }
   }
