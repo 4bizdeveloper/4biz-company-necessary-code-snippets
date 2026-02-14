@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_aimbridge_form'
 
 <style>
     .aimbridge-wrapper {
-        background-color: #4747d7;
+        background-color: #015BFF;
         color: white;
         width: 100%;
         max-width: 450px;
