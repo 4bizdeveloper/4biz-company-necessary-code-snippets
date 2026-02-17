@@ -1,9 +1,9 @@
 /**
- * UPDATED MODERN POPUP: Color #1f6db3
- * Handles: Popup UI, Animation Logic, and SMTP Email via WordPress
+ * UNIVERSAL RESPONSIVE POPUP v3.1
+ * Optimization: Fluid Typography, Precision Spacing, and Button Triggers
  */
 
-// 1. The PHP Mail Handler (Server Side) - No Changes Needed
+// 1. PHP Mail Handler
 add_action('wp_ajax_tji_send_lead', 'tji_handle_form_submission');
 add_action('wp_ajax_nopriv_tji_send_lead', 'tji_handle_form_submission');
 
@@ -14,42 +14,34 @@ function tji_handle_form_submission() {
     $edu   = sanitize_text_field($_POST['qualification']);
 
     $to      = get_option('admin_email'); 
-    $subject = "New Lead: " . $name;
-    
-    $message  = "<h3>New Consultation Request</h3>";
-    $message .= "<p><strong>Name:</strong> $name</p>";
-    $message .= "<p><strong>Email:</strong> $email</p>";
-    $message .= "<p><strong>Phone:</strong> $phone</p>";
-    $message .= "<p><strong>Education:</strong> $edu</p>";
-
+    $subject = "Consultation Lead: " . $name;
+    $message = "<h3>New Request</h3><p>Name: $name<br>Email: $email<br>Phone: $phone<br>Edu: $edu</p>";
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
-    $sent = wp_mail($to, $subject, $message, $headers);
-
-    if ($sent) {
-        wp_send_json_success('Mail sent successfully');
+    if (wp_mail($to, $subject, $message, $headers)) {
+        wp_send_json_success();
     } else {
-        wp_send_json_error('Mail failed to send');
+        wp_send_json_error();
     }
     wp_die();
 }
 
-// 2. Updated Popup HTML, CSS, and JS
+// 2. Popup UI
 add_action('wp_footer', function() {
     ?>
     <div id="tji-popup-overlay" class="tji-overlay">
         <div class="tji-modal">
             <button class="tji-close-btn" onclick="closeTjiPopup()" aria-label="Close">&times;</button>
+            
             <div class="tji-flex-container">
                 <div class="tji-image-column">
                     <img src="https://new.aimbridgeeducation.com/wp-content/uploads/2026/02/IMG-20260206-WA0030.jpg-1-rotated.jpeg" alt="Consultation">
-                    <div class="tji-image-overlay"></div>
                 </div>
 
                 <div class="tji-form-column">
                     <div class="tji-modal-header">
-                        <h3>Get Started</h3>
-                        <p>Your journey to global education begins with a single step.</p>
+                        <h3 class="tji-title">Book Free Consultation</h3>
+                        <p class="tji-subtitle">Start your journey to global education today.</p>
                     </div>
 
                     <form id="tji-lead-form" class="tji-form">
@@ -57,201 +49,184 @@ add_action('wp_footer', function() {
                             <label>Full Name</label>
                             <input type="text" name="full_name" placeholder="John Doe" required>
                         </div>
-
                         <div class="tji-input-group">
                             <label>Email Address</label>
-                            <input type="email" name="email" placeholder="name@domain.com" required>
+                            <input type="email" name="email" placeholder="email@domain.com" required>
                         </div>
-
                         <div class="tji-input-group">
                             <label>Phone Number</label>
                             <input type="tel" name="phone" placeholder="+91 00000 00000" required>
                         </div>
-
                         <div class="tji-input-group">
-                            <label>Educational Qualifications</label>
-                            <div class="tji-select-wrapper">
-                                <select name="qualification" required>
-                                    <option value="" disabled selected>Select your level</option>
-                                    <option value="High School">High School</option>
-                                    <option value="Undergraduate">Undergraduate</option>
-                                    <option value="Postgraduate">Postgraduate</option>
-                                    <option value="Doctorate">Doctorate / PhD</option>
-                                </select>
-                            </div>
+                            <label>Education</label>
+                            <select name="qualification" required>
+                                <option value="" disabled selected>Select level</option>
+                                <option value="High School">High School</option>
+                                <option value="Undergraduate">Undergraduate</option>
+                                <option value="Postgraduate">Postgraduate</option>
+                                <option value="Doctorate">Doctorate</option>
+                            </select>
                         </div>
-
-                        <button type="submit" id="tji-submit-btn" class="tji-submit-btn">Book Free Consultation</button>
-                        <p id="tji-status-msg" style="display:none; text-align:center; margin-top:15px; font-weight:600; font-size:14px;"></p>
+                        <button type="submit" id="tji-submit-btn" class="tji-submit-btn">Get Started Now</button>
+                        <p id="tji-status-msg" style="display:none; text-align:center; margin-top:10px; font-weight:bold;"></p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-   <style>
-    :root { 
-        --tji-primary: #1f6db3; 
-        --tji-dark: #0f3d66; 
-        --tji-bg: #f8fafc;
-        --tji-transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .tji-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px);
-        display: none; justify-content: center; align-items: center;
-        z-index: 999999; opacity: 0; transition: opacity 0.3s ease;
-        padding: 15px; /* Prevention for touching screen edges */
-    }
-    .tji-overlay.active { display: flex; opacity: 1; }
-    
-    .tji-modal {
-        background: #ffffff; width: 100%; max-width: 850px; border-radius: 20px;
-        overflow: hidden; position: relative; 
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        transform: scale(0.95) translateY(20px); transition: var(--tji-transition);
-        font-family: 'Inter', -apple-system, sans-serif;
-        max-height: 95vh; overflow-y: auto; /* Scrollable if content is too tall */
-    }
-    .tji-overlay.active .tji-modal { transform: scale(1) translateY(0); }
-
-    .tji-flex-container { display: flex; flex-direction: row; min-height: 500px; }
-    
-    /* Image Column Logic */
-    .tji-image-column { flex: 1; position: relative; min-height: 100%; }
-    .tji-image-column img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .tji-image-overlay { 
-        position: absolute; top:0; left:0; width:100%; height:100%; 
-        background: linear-gradient(to bottom, rgba(31,109,179,0.1), rgba(15,61,102,0.5));
-    }
-
-    /* Form Column Logic */
-    .tji-form-column { flex: 1.2; padding: 40px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
-    
-    .tji-modal-header h3 { color: var(--tji-primary); font-size: 28px; margin: 0 0 8px 0; font-weight: 800; line-height: 1.2; }
-    .tji-modal-header p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.4; }
-
-    .tji-form { display: flex; flex-direction: column; gap: 15px; }
-    .tji-input-group { display: flex; flex-direction: column; gap: 5px; }
-    .tji-input-group label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .tji-input-group input, .tji-input-group select {
-        width: 100% !important; height: 45px !important; padding: 0 15px !important; 
-        border: 2px solid #f1f5f9 !important; border-radius: 10px !important; 
-        background: var(--tji-bg) !important; font-size: 14px !important;
-        transition: 0.2s ease !important; outline: none !important;
-    }
-    .tji-input-group input:focus, .tji-input-group select:focus {
-        border-color: var(--tji-primary) !important; background: #fff !important;
-        box-shadow: 0 0 0 3px rgba(31, 109, 179, 0.1) !important;
-    }
-
-    .tji-submit-btn {
-        background: linear-gradient(135deg, #1f6db3 0%, #164e82 100%);
-        color: #fff; border: none; padding: 14px; border-radius: 10px;
-        font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s ease; 
-        margin-top: 5px; box-shadow: 0 8px 15px -3px rgba(31, 109, 179, 0.3);
-    }
-
-    .tji-close-btn {
-        position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
-        background: #fff; border: none; border-radius: 50%; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; z-index: 100;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 18px; color: #64748b;
-    }
-
-    /* --- RESPONSIVENESS --- */
-
-    /* Tablet (Portrait & small Landscape) */
-    @media (max-width: 900px) {
-        .tji-modal { max-width: 700px; }
-        .tji-form-column { padding: 30px; }
-    }
-
-    /* Mobile (Phones) */
-    @media (max-width: 650px) {
-        .tji-flex-container { flex-direction: column; }
-        .tji-image-column { 
-            height: 140px; /* Slimmer image on mobile to save space */
-            min-height: 140px;
+    <style>
+        :root { 
+            --tji-primary: #1f6db3; 
+            --tji-slate-700: #334155;
+            --tji-slate-500: #64748b;
+            --tji-border: #94a3b8; 
         }
+
+        .tji-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.9); display: none; 
+            justify-content: center; align-items: center; z-index: 999999;
+            padding: clamp(10px, 3vw, 25px); box-sizing: border-box;
+        }
+
+        .tji-modal {
+            background: #fff; width: 100%; max-width: 820px; border-radius: 16px;
+            position: relative; overflow: hidden; max-height: 92vh; overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .tji-flex-container { display: flex; flex-direction: column; }
+        @media (min-width: 768px) { .tji-flex-container { flex-direction: row; min-height: 520px; } }
+
+        /* HEADER TEXT OPTIMIZATION */
+        .tji-modal-header {
+            margin-bottom: clamp(15px, 4vw, 25px);
+            text-align: left;
+        }
+
+        .tji-title {
+            color: var(--tji-primary);
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0 0 8px 0;
+            /* Fluid font: min 22px, scales with width, max 32px */
+            font-size: clamp(22px, 5vw, 32px);
+            letter-spacing: -0.02em;
+        }
+
+        .tji-subtitle {
+            color: var(--tji-slate-500);
+            font-weight: 400;
+            line-height: 1.5;
+            margin: 0;
+            /* Fluid font: min 14px, max 16px */
+            font-size: clamp(14px, 2vw, 16px);
+        }
+
+        /* MOBILE SPECIFIC TEXT ADJUSTMENTS */
+        @media (max-width: 767px) {
+            .tji-modal-header { text-align: center; padding-top: 5px; }
+            .tji-title { margin-bottom: 6px; }
+        }
+
+        /* IMAGE SCALING */
+        .tji-image-column { width: 100%; height: 160px; flex-shrink: 0; }
+        @media (min-width: 768px) { .tji-image-column { width: 42%; height: auto; } }
+        .tji-image-column img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* FORM PADDING & SPACING */
         .tji-form-column { 
-            padding: 25px 20px; 
-            flex: none; 
+            padding: clamp(20px, 5vw, 45px); 
+            width: 100%; box-sizing: border-box; 
         }
-        .tji-modal-header h3 { font-size: 22px; text-align: center; }
-        .tji-modal-header p { font-size: 13px; text-align: center; margin-bottom: 20px; }
-        
-        .tji-modal { border-radius: 15px; }
-        .tji-input-group input, .tji-input-group select { height: 42px !important; }
-        .tji-submit-btn { padding: 12px; font-size: 14px; }
-        
-        /* Ensure close button is visible on white background or image */
-        .tji-close-btn { background: rgba(255,255,255,0.9); top: 10px; right: 10px; }
-    }
+        @media (min-width: 768px) { .tji-form-column { width: 58%; } }
 
-    /* Extra Small Screen Fixes (iPhone SE, etc) */
-    @media (max-height: 600px) {
-        .tji-image-column { display: none; } /* Hide image on very short screens */
-        .tji-modal { margin-top: 10px; }
-    }
-</style>
+        .tji-form { display: flex; flex-direction: column; gap: clamp(12px, 3vw, 18px); }
+        
+        .tji-input-group label { 
+            font-size: 12px; font-weight: 700; color: var(--tji-slate-700); 
+            text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; display: block;
+        }
+
+        .tji-input-group input, .tji-input-group select {
+            width: 100% !important; height: 48px !important; padding: 0 14px !important;
+            border: 2px solid var(--tji-border) !important; border-radius: 8px !important;
+            font-size: 16px !important; color: #1e293b !important; outline: none; transition: 0.2s;
+        }
+
+        .tji-input-group input:focus { border-color: var(--tji-primary) !important; box-shadow: 0 0 0 3px rgba(31,109,179,0.1); }
+
+        .tji-submit-btn {
+            background: var(--tji-primary); color: #fff; border: none; padding: 16px;
+            border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 8px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .tji-submit-btn:active { transform: scale(0.98); }
+
+        .tji-close-btn {
+            position: absolute; top: 15px; right: 15px; width: 36px; height: 36px;
+            background: #fff; border: 2px solid #000; border-radius: 50%;
+            font-size: 24px; font-weight: bold; cursor: pointer; z-index: 100;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
 
     <script>
         const tjiOverlay = document.getElementById('tji-popup-overlay');
         const tjiForm = document.getElementById('tji-lead-form');
-        const tjiBtn = document.getElementById('tji-submit-btn');
-        const tjiStatus = document.getElementById('tji-status-msg');
 
         function openTjiPopup() {
             tjiOverlay.style.display = 'flex';
-            setTimeout(() => tjiOverlay.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
         }
 
         function closeTjiPopup() {
-            tjiOverlay.classList.remove('active');
-            setTimeout(() => tjiOverlay.style.display = 'none', 500);
+            tjiOverlay.style.display = 'none';
+            document.body.style.overflow = '';
         }
 
-        window.addEventListener('load', () => setTimeout(openTjiPopup, 2000));
-        
-        setInterval(() => {
-            if(!tjiOverlay.classList.contains('active')) openTjiPopup();
-        }, 45000); // Increased interval slightly for better UX
+        tjiOverlay.addEventListener('click', (e) => { if(e.target === tjiOverlay) closeTjiPopup(); });
+
+        // Trigger on any element with class .open-tji-popup
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.open-tji-popup')) {
+                e.preventDefault();
+                openTjiPopup();
+            }
+        });
+
+        // AUTO-TRIGGER LOGIC
+        window.addEventListener('load', () => {
+            setTimeout(openTjiPopup, 3000); // 3 seconds after load
+            
+            setInterval(() => {
+                if (tjiOverlay.style.display === 'none') {
+                    openTjiPopup();
+                }
+            }, 30000); // Re-trigger every 30 seconds
+        });
 
         tjiForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            tjiBtn.innerText = 'Processing...';
-            tjiBtn.disabled = true;
+            const btn = document.getElementById('tji-submit-btn');
+            const msg = document.getElementById('tji-status-msg');
+            btn.innerText = 'Sending...';
+            btn.disabled = true;
 
             const formData = new FormData(this);
             formData.append('action', 'tji_send_lead');
 
-            fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
-                method: 'POST',
-                body: formData
-            })
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', { method: 'POST', body: formData })
             .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    tjiStatus.innerText = '✔ Consultation Booked Successfully!';
-                    tjiStatus.style.color = '#10b981';
-                    tjiStatus.style.display = 'block';
-                    setTimeout(() => {
-                        tjiForm.reset();
-                        closeTjiPopup();
-                        tjiStatus.style.display = 'none';
-                    }, 3000);
-                } else {
-                    alert('Submission failed. Please check your connection.');
-                }
+            .then(() => {
+                msg.innerText = '✔ Consultation Booked Successfully!';
+                msg.style.color = '#059669';
+                msg.style.display = 'block';
+                setTimeout(() => { closeTjiPopup(); msg.style.display = 'none'; tjiForm.reset(); }, 2500);
             })
-            .catch(() => alert('Server error. Please try again.'))
-            .finally(() => {
-                tjiBtn.innerText = 'Book Free Consultation';
-                tjiBtn.disabled = false;
-            });
+            .catch(() => alert('Error sending request.'))
+            .finally(() => { btn.innerText = 'Get Started Now'; btn.disabled = false; });
         });
     </script>
     <?php
