@@ -89,93 +89,114 @@ add_action('wp_footer', function() {
         </div>
     </div>
 
-    <style>
-        /* CSS Variable for the new theme color */
-        :root { --tji-primary: #1f6db3; --tji-dark: #0f3d66; }
+   <style>
+    :root { 
+        --tji-primary: #1f6db3; 
+        --tji-dark: #0f3d66; 
+        --tji-bg: #f8fafc;
+        --tji-transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
 
-        .tji-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center;
-            z-index: 999999; opacity: 0; transition: opacity 0.4s ease;
+    .tji-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px);
+        display: none; justify-content: center; align-items: center;
+        z-index: 999999; opacity: 0; transition: opacity 0.3s ease;
+        padding: 15px; /* Prevention for touching screen edges */
+    }
+    .tji-overlay.active { display: flex; opacity: 1; }
+    
+    .tji-modal {
+        background: #ffffff; width: 100%; max-width: 850px; border-radius: 20px;
+        overflow: hidden; position: relative; 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        transform: scale(0.95) translateY(20px); transition: var(--tji-transition);
+        font-family: 'Inter', -apple-system, sans-serif;
+        max-height: 95vh; overflow-y: auto; /* Scrollable if content is too tall */
+    }
+    .tji-overlay.active .tji-modal { transform: scale(1) translateY(0); }
+
+    .tji-flex-container { display: flex; flex-direction: row; min-height: 500px; }
+    
+    /* Image Column Logic */
+    .tji-image-column { flex: 1; position: relative; min-height: 100%; }
+    .tji-image-column img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tji-image-overlay { 
+        position: absolute; top:0; left:0; width:100%; height:100%; 
+        background: linear-gradient(to bottom, rgba(31,109,179,0.1), rgba(15,61,102,0.5));
+    }
+
+    /* Form Column Logic */
+    .tji-form-column { flex: 1.2; padding: 40px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
+    
+    .tji-modal-header h3 { color: var(--tji-primary); font-size: 28px; margin: 0 0 8px 0; font-weight: 800; line-height: 1.2; }
+    .tji-modal-header p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.4; }
+
+    .tji-form { display: flex; flex-direction: column; gap: 15px; }
+    .tji-input-group { display: flex; flex-direction: column; gap: 5px; }
+    .tji-input-group label { font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .tji-input-group input, .tji-input-group select {
+        width: 100% !important; height: 45px !important; padding: 0 15px !important; 
+        border: 2px solid #f1f5f9 !important; border-radius: 10px !important; 
+        background: var(--tji-bg) !important; font-size: 14px !important;
+        transition: 0.2s ease !important; outline: none !important;
+    }
+    .tji-input-group input:focus, .tji-input-group select:focus {
+        border-color: var(--tji-primary) !important; background: #fff !important;
+        box-shadow: 0 0 0 3px rgba(31, 109, 179, 0.1) !important;
+    }
+
+    .tji-submit-btn {
+        background: linear-gradient(135deg, #1f6db3 0%, #164e82 100%);
+        color: #fff; border: none; padding: 14px; border-radius: 10px;
+        font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s ease; 
+        margin-top: 5px; box-shadow: 0 8px 15px -3px rgba(31, 109, 179, 0.3);
+    }
+
+    .tji-close-btn {
+        position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
+        background: #fff; border: none; border-radius: 50%; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 18px; color: #64748b;
+    }
+
+    /* --- RESPONSIVENESS --- */
+
+    /* Tablet (Portrait & small Landscape) */
+    @media (max-width: 900px) {
+        .tji-modal { max-width: 700px; }
+        .tji-form-column { padding: 30px; }
+    }
+
+    /* Mobile (Phones) */
+    @media (max-width: 650px) {
+        .tji-flex-container { flex-direction: column; }
+        .tji-image-column { 
+            height: 140px; /* Slimmer image on mobile to save space */
+            min-height: 140px;
         }
-        .tji-overlay.active { display: flex; opacity: 1; }
+        .tji-form-column { 
+            padding: 25px 20px; 
+            flex: none; 
+        }
+        .tji-modal-header h3 { font-size: 22px; text-align: center; }
+        .tji-modal-header p { font-size: 13px; text-align: center; margin-bottom: 20px; }
         
-        .tji-modal {
-            background: #ffffff; width: 92%; max-width: 850px; border-radius: 20px;
-            overflow: hidden; position: relative; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9) translateY(30px); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-        .tji-overlay.active .tji-modal { transform: scale(1) translateY(0); }
-
-        .tji-flex-container { display: flex; flex-direction: row; min-height: 550px; }
+        .tji-modal { border-radius: 15px; }
+        .tji-input-group input, .tji-input-group select { height: 42px !important; }
+        .tji-submit-btn { padding: 12px; font-size: 14px; }
         
-        .tji-image-column { flex: 1; position: relative; overflow: hidden; }
-        .tji-image-column img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .tji-image-overlay { 
-            position: absolute; top:0; left:0; width:100%; height:100%; 
-            background: linear-gradient(to bottom, rgba(31,109,179,0.2), rgba(15,61,102,0.6));
-        }
+        /* Ensure close button is visible on white background or image */
+        .tji-close-btn { background: rgba(255,255,255,0.9); top: 10px; right: 10px; }
+    }
 
-        .tji-form-column { flex: 1.1; padding: 45px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
-        
-        .tji-modal-header h3 { color: var(--tji-primary); font-size: 32px; margin: 0 0 8px 0; font-weight: 800; letter-spacing: -0.5px; }
-        .tji-modal-header p { color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.5; }
-
-        .tji-form { display: flex; flex-direction: column; gap: 18px; }
-        .tji-input-group { display: flex; flex-direction: column; gap: 6px; }
-        .tji-input-group label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .tji-input-group input, .tji-input-group select {
-            width: 100% !important; box-sizing: border-box !important;
-            height: 48px !important; padding: 0 16px !important; 
-            border: 2px solid #f1f5f9 !important; border-radius: 12px !important; 
-            background: #f8fafc !important; font-size: 15px !important; color: #1e293b !important;
-            transition: all 0.3s ease !important; outline: none !important;
-        }
-        .tji-input-group input:focus, .tji-input-group select:focus {
-            border-color: var(--tji-primary) !important; background: #fff !important;
-            box-shadow: 0 0 0 4px rgba(31, 109, 179, 0.1) !important;
-        }
-
-        .tji-select-wrapper { position: relative; width: 100%; }
-        .tji-select-wrapper::after {
-            content: '\25BC'; position: absolute; right: 16px; top: 50%;
-            transform: translateY(-50%); color: var(--tji-primary); font-size: 12px; pointer-events: none;
-        }
-        .tji-input-group select { appearance: none !important; -webkit-appearance: none; cursor: pointer; }
-
-        .tji-submit-btn {
-            background: var(--tji-primary);
-            background: linear-gradient(135deg, #1f6db3 0%, #164e82 100%);
-            color: #fff; border: none; padding: 16px; border-radius: 12px;
-            font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.3s ease; 
-            margin-top: 10px; box-shadow: 0 10px 15px -3px rgba(31, 109, 179, 0.3);
-        }
-        .tji-submit-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 20px 25px -5px rgba(31, 109, 179, 0.4); 
-            filter: brightness(1.1);
-        }
-        .tji-submit-btn:active { transform: translateY(0); }
-
-        .tji-close-btn {
-            position: absolute; top: 15px; right: 15px; width: 36px; height: 36px;
-            background: #f1f5f9; border: none; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; z-index: 10;
-            font-size: 20px; color: #64748b; transition: all 0.2s;
-        }
-        .tji-close-btn:hover { background: #e2e8f0; color: #0f172a; transform: rotate(90deg); }
-
-        @media (max-width: 768px) {
-            .tji-flex-container { flex-direction: column; }
-            .tji-image-column { height: 160px; }
-            .tji-form-column { padding: 30px 20px; }
-            .tji-modal-header h3 { font-size: 26px; }
-        }
-    </style>
+    /* Extra Small Screen Fixes (iPhone SE, etc) */
+    @media (max-height: 600px) {
+        .tji-image-column { display: none; } /* Hide image on very short screens */
+        .tji-modal { margin-top: 10px; }
+    }
+</style>
 
     <script>
         const tjiOverlay = document.getElementById('tji-popup-overlay');
