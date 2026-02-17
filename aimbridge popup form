@@ -1,0 +1,237 @@
+/**
+ * UPDATED MODERN POPUP: Color #1f6db3
+ * Handles: Popup UI, Animation Logic, and SMTP Email via WordPress
+ */
+
+// 1. The PHP Mail Handler (Server Side) - No Changes Needed
+add_action('wp_ajax_tji_send_lead', 'tji_handle_form_submission');
+add_action('wp_ajax_nopriv_tji_send_lead', 'tji_handle_form_submission');
+
+function tji_handle_form_submission() {
+    $name  = sanitize_text_field($_POST['full_name']);
+    $email = sanitize_email($_POST['email']);
+    $phone = sanitize_text_field($_POST['phone']);
+    $edu   = sanitize_text_field($_POST['qualification']);
+
+    $to      = get_option('admin_email'); 
+    $subject = "New Lead: " . $name;
+    
+    $message  = "<h3>New Consultation Request</h3>";
+    $message .= "<p><strong>Name:</strong> $name</p>";
+    $message .= "<p><strong>Email:</strong> $email</p>";
+    $message .= "<p><strong>Phone:</strong> $phone</p>";
+    $message .= "<p><strong>Education:</strong> $edu</p>";
+
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+
+    $sent = wp_mail($to, $subject, $message, $headers);
+
+    if ($sent) {
+        wp_send_json_success('Mail sent successfully');
+    } else {
+        wp_send_json_error('Mail failed to send');
+    }
+    wp_die();
+}
+
+// 2. Updated Popup HTML, CSS, and JS
+add_action('wp_footer', function() {
+    ?>
+    <div id="tji-popup-overlay" class="tji-overlay">
+        <div class="tji-modal">
+            <button class="tji-close-btn" onclick="closeTjiPopup()" aria-label="Close">&times;</button>
+            <div class="tji-flex-container">
+                <div class="tji-image-column">
+                    <img src="https://new.aimbridgeeducation.com/wp-content/uploads/2026/02/IMG-20260206-WA0030.jpg-1-rotated.jpeg" alt="Consultation">
+                    <div class="tji-image-overlay"></div>
+                </div>
+
+                <div class="tji-form-column">
+                    <div class="tji-modal-header">
+                        <h3>Get Started</h3>
+                        <p>Your journey to global education begins with a single step.</p>
+                    </div>
+
+                    <form id="tji-lead-form" class="tji-form">
+                        <div class="tji-input-group">
+                            <label>Full Name</label>
+                            <input type="text" name="full_name" placeholder="John Doe" required>
+                        </div>
+
+                        <div class="tji-input-group">
+                            <label>Email Address</label>
+                            <input type="email" name="email" placeholder="name@domain.com" required>
+                        </div>
+
+                        <div class="tji-input-group">
+                            <label>Phone Number</label>
+                            <input type="tel" name="phone" placeholder="+91 00000 00000" required>
+                        </div>
+
+                        <div class="tji-input-group">
+                            <label>Educational Qualifications</label>
+                            <div class="tji-select-wrapper">
+                                <select name="qualification" required>
+                                    <option value="" disabled selected>Select your level</option>
+                                    <option value="High School">High School</option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Postgraduate">Postgraduate</option>
+                                    <option value="Doctorate">Doctorate / PhD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="tji-submit-btn" class="tji-submit-btn">Book Free Consultation</button>
+                        <p id="tji-status-msg" style="display:none; text-align:center; margin-top:15px; font-weight:600; font-size:14px;"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* CSS Variable for the new theme color */
+        :root { --tji-primary: #1f6db3; --tji-dark: #0f3d66; }
+
+        .tji-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 999999; opacity: 0; transition: opacity 0.4s ease;
+        }
+        .tji-overlay.active { display: flex; opacity: 1; }
+        
+        .tji-modal {
+            background: #ffffff; width: 92%; max-width: 850px; border-radius: 20px;
+            overflow: hidden; position: relative; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9) translateY(30px); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .tji-overlay.active .tji-modal { transform: scale(1) translateY(0); }
+
+        .tji-flex-container { display: flex; flex-direction: row; min-height: 550px; }
+        
+        .tji-image-column { flex: 1; position: relative; overflow: hidden; }
+        .tji-image-column img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .tji-image-overlay { 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            background: linear-gradient(to bottom, rgba(31,109,179,0.2), rgba(15,61,102,0.6));
+        }
+
+        .tji-form-column { flex: 1.1; padding: 45px; display: flex; flex-direction: column; justify-content: center; background: #fff; }
+        
+        .tji-modal-header h3 { color: var(--tji-primary); font-size: 32px; margin: 0 0 8px 0; font-weight: 800; letter-spacing: -0.5px; }
+        .tji-modal-header p { color: #64748b; font-size: 15px; margin-bottom: 30px; line-height: 1.5; }
+
+        .tji-form { display: flex; flex-direction: column; gap: 18px; }
+        .tji-input-group { display: flex; flex-direction: column; gap: 6px; }
+        .tji-input-group label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .tji-input-group input, .tji-input-group select {
+            width: 100% !important; box-sizing: border-box !important;
+            height: 48px !important; padding: 0 16px !important; 
+            border: 2px solid #f1f5f9 !important; border-radius: 12px !important; 
+            background: #f8fafc !important; font-size: 15px !important; color: #1e293b !important;
+            transition: all 0.3s ease !important; outline: none !important;
+        }
+        .tji-input-group input:focus, .tji-input-group select:focus {
+            border-color: var(--tji-primary) !important; background: #fff !important;
+            box-shadow: 0 0 0 4px rgba(31, 109, 179, 0.1) !important;
+        }
+
+        .tji-select-wrapper { position: relative; width: 100%; }
+        .tji-select-wrapper::after {
+            content: '\25BC'; position: absolute; right: 16px; top: 50%;
+            transform: translateY(-50%); color: var(--tji-primary); font-size: 12px; pointer-events: none;
+        }
+        .tji-input-group select { appearance: none !important; -webkit-appearance: none; cursor: pointer; }
+
+        .tji-submit-btn {
+            background: var(--tji-primary);
+            background: linear-gradient(135deg, #1f6db3 0%, #164e82 100%);
+            color: #fff; border: none; padding: 16px; border-radius: 12px;
+            font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.3s ease; 
+            margin-top: 10px; box-shadow: 0 10px 15px -3px rgba(31, 109, 179, 0.3);
+        }
+        .tji-submit-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 20px 25px -5px rgba(31, 109, 179, 0.4); 
+            filter: brightness(1.1);
+        }
+        .tji-submit-btn:active { transform: translateY(0); }
+
+        .tji-close-btn {
+            position: absolute; top: 15px; right: 15px; width: 36px; height: 36px;
+            background: #f1f5f9; border: none; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; z-index: 10;
+            font-size: 20px; color: #64748b; transition: all 0.2s;
+        }
+        .tji-close-btn:hover { background: #e2e8f0; color: #0f172a; transform: rotate(90deg); }
+
+        @media (max-width: 768px) {
+            .tji-flex-container { flex-direction: column; }
+            .tji-image-column { height: 160px; }
+            .tji-form-column { padding: 30px 20px; }
+            .tji-modal-header h3 { font-size: 26px; }
+        }
+    </style>
+
+    <script>
+        const tjiOverlay = document.getElementById('tji-popup-overlay');
+        const tjiForm = document.getElementById('tji-lead-form');
+        const tjiBtn = document.getElementById('tji-submit-btn');
+        const tjiStatus = document.getElementById('tji-status-msg');
+
+        function openTjiPopup() {
+            tjiOverlay.style.display = 'flex';
+            setTimeout(() => tjiOverlay.classList.add('active'), 10);
+        }
+
+        function closeTjiPopup() {
+            tjiOverlay.classList.remove('active');
+            setTimeout(() => tjiOverlay.style.display = 'none', 500);
+        }
+
+        window.addEventListener('load', () => setTimeout(openTjiPopup, 2000));
+        
+        setInterval(() => {
+            if(!tjiOverlay.classList.contains('active')) openTjiPopup();
+        }, 45000); // Increased interval slightly for better UX
+
+        tjiForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            tjiBtn.innerText = 'Processing...';
+            tjiBtn.disabled = true;
+
+            const formData = new FormData(this);
+            formData.append('action', 'tji_send_lead');
+
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    tjiStatus.innerText = '✔ Consultation Booked Successfully!';
+                    tjiStatus.style.color = '#10b981';
+                    tjiStatus.style.display = 'block';
+                    setTimeout(() => {
+                        tjiForm.reset();
+                        closeTjiPopup();
+                        tjiStatus.style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert('Submission failed. Please check your connection.');
+                }
+            })
+            .catch(() => alert('Server error. Please try again.'))
+            .finally(() => {
+                tjiBtn.innerText = 'Book Free Consultation';
+                tjiBtn.disabled = false;
+            });
+        });
+    </script>
+    <?php
+});
