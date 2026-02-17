@@ -13,7 +13,7 @@
         </ul>
 
         <div class="header-right">
-            <a href="#book" class="cta-pill-button sliding-pulse-motion">🎫 BOOK NOW!</a>
+            <a href="#book" class="cta-pill-button header-cta sliding-horizontal">🎫 BOOK NOW!</a>
             <div class="mobile-toggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -24,144 +24,136 @@
     
     <div id="mobile-sidebar" class="sidebar">
         <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
-        <a href="/" onclick="toggleMobileMenu()">Home</a>
-        <a href="/about-us" onclick="toggleMobileMenu()">About Us</a>
-        <a href="/contact-us" onclick="toggleMobileMenu()">Contact Us</a>
-        <div style="padding: 25px 32px;">
-            <a href="#" class="cta-pill-button" style="display: block; text-align: center;">Book Now</a>
+        <div class="sidebar-links">
+            <a href="/" onclick="toggleMobileMenu()">Home</a>
+            <a href="#aboutus" onclick="toggleMobileMenu()">About Us</a>
+            <a href="/#contact" onclick="toggleMobileMenu()">Contact Us</a>
+            <div style="padding: 25px 32px;">
+                <a href="#book" class="cta-pill-button sliding-horizontal" style="display: block; text-align: center;">Book Now</a>
+            </div>
         </div>
     </div>
 </header>
 
 <style>
 :root {
-    /* Updated to your specific brand blue */
     --brand-blue: #1f6db3;
     --glass-bg: rgba(255, 255, 255, 0.98);
+    --text-main: #1a1a1a;
 }
 
 #aimbridge-custom-header {
     position: fixed;
-    top: 25px; 
+    top: 12px; 
     left: 0;
     width: 100%;
     z-index: 999999;
     display: flex;
     justify-content: center;
-    padding: 0 20px;
+    padding: 0 15px;
     box-sizing: border-box;
 }
 
-/* Clear WP Admin Bar */
-.admin-bar #aimbridge-custom-header {
-    top: 55px;
-}
+/* WP Admin Bar Adjustment */
+.admin-bar #aimbridge-custom-header { top: 42px; }
 
 .header-pill {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px; 
-    padding: 14px 35px; 
+    max-width: 1150px; 
+    /* SLIGHTLY INCREASED VERTICAL PADDING (from 8px to 11px) */
+    padding: 11px 30px; 
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     border-radius: 100px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.8);
 }
 
-.header-logo img {
-    height: 48px; 
-    width: auto;
+.header-logo img { 
+    height: 42px; /* Restored slightly larger size to match padding */
+    width: auto; 
     display: block;
 }
 
-.nav-menu {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 40px; 
+.nav-menu { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+    margin: 0; 
+    padding: 0; 
 }
 
 .nav-link-item {
     text-decoration: none;
-    color: #1a1a1a;
-    font-weight: 700;
-    font-size: 17px; 
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 15px; 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.2px;
     transition: color 0.3s ease;
-    font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
 .nav-link-item:hover { color: var(--brand-blue); }
 
-/* Sliding Button with Updated Shadows */
 .cta-pill-button {
     background: var(--brand-blue);
     color: #fff !important;
-    padding: 14px 32px;
+    padding: 10px 24px;
     border-radius: 50px;
     text-decoration: none;
-    font-weight: 800;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 14px;
     display: inline-block;
     border: none;
-    position: relative;
-    /* Updated shadow color */
-    box-shadow: 0 6px 15px rgba(31, 109, 179, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: none !important;
+    white-space: nowrap;
 }
 
-/* Updated slidingPulse with #1f6db3 (31, 109, 179) */
-@keyframes slidingPulse {
-  0% { 
-    transform: translateX(0px);
-    box-shadow: 0 0 0 0 rgba(31, 109, 179, 0.6);
-  }
-  50% { 
-    transform: translateX(10px); 
-    box-shadow: 0 0 0 12px rgba(31, 109, 179, 0); 
-  }
-  100% { 
-    transform: translateX(0px);
-    box-shadow: 0 0 0 0 rgba(31, 109, 179, 0);
-  }
+@keyframes slideHorizontal {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
 }
 
-.sliding-pulse-motion {
-    animation: slidingPulse 2.8s ease-in-out infinite;
+.sliding-horizontal {
+    animation: slideHorizontal 2s ease-in-out infinite;
 }
 
-.sliding-pulse-motion:hover {
-    animation-play-state: paused;
-    transform: scale(1.05) translateX(0);
-    box-shadow: 0 8px 25px rgba(31, 109, 179, 0.5);
+.mobile-toggle { 
+    display: none; 
+    flex-direction: column; 
+    gap: 5px; 
+    cursor: pointer; 
 }
-
-/* Mobile Setup */
-.mobile-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; }
-.mobile-toggle span { width: 28px; height: 3px; background: #1a1a1a; }
+.mobile-toggle span { width: 24px; height: 2px; background: var(--text-main); border-radius: 2px; }
 
 .sidebar {
     height: 100%; width: 0; position: fixed; z-index: 1000000;
     top: 0; right: 0; background-color: #ffffff;
-    transition: 0.5s; padding-top: 80px; overflow-x: hidden;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    overflow-x: hidden;
 }
+.sidebar-links { padding-top: 80px; }
+.sidebar a { padding: 15px 35px; text-decoration: none; font-size: 18px; color: var(--text-main); display: block; font-weight: 600; }
+.sidebar .close-btn { position: absolute; top: 20px; right: 25px; font-size: 35px; cursor: pointer; }
 
-.sidebar a { padding: 20px 35px; text-decoration: none; font-size: 20px; color: #1a1a1a; display: block; font-weight: 700; }
-.sidebar .close-btn { position: absolute; top: 25px; right: 35px; font-size: 40px; cursor: pointer; }
+/* --- RESPONSIVE FIXES --- */
 
-@media (max-width: 991px) {
+@media (max-width: 1024px) {
     .nav-menu { display: none; }
     .mobile-toggle { display: flex; }
-    .header-pill { padding: 10px 25px; width: 94%; }
+    .header-cta { display: inline-block; } 
+    .header-pill { width: 95%; padding: 10px 20px; }
 }
 
-@media (max-width: 600px) {
-    .header-logo img { height: 38px; }
-    .cta-pill-button { display: none; }
+@media (max-width: 650px) {
+    .header-cta { display: none !important; } 
+    #aimbridge-custom-header { top: 8px; }
+    .header-logo img { height: 34px; }
 }
 </style>
 
@@ -169,10 +161,16 @@
 <script>
 function toggleMobileMenu() {
     const sidebar = document.getElementById("mobile-sidebar");
-    sidebar.style.width = sidebar.style.width === "280px" ? "0" : "280px";
+    const currentWidth = sidebar.style.width;
+    sidebar.style.width = (currentWidth === "280px") ? "0" : "280px";
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    gsap.from(".header-pill", { y: -120, opacity: 0, duration: 1.4, ease: "expo.out" });
+    gsap.from(".header-pill", { 
+        y: -60, 
+        opacity: 0, 
+        duration: 1, 
+        ease: "power3.out" 
+    });
 });
 </script>
