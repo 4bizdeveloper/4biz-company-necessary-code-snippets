@@ -3,18 +3,18 @@
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
 <style>
-/* Ensure the background stays behind the content */
+/* Background Setup */
 #particles-js {
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    z-index: -1; /* Places it behind your website content */
-    background-color: #ffffff; /* Your requested white background */
+    z-index: -1; /* Keeps it behind your site content */
+    background-color: #ffffff; 
 }
 
-/* Ensure your existing website sections are transparent if they have solid white backgrounds */
+/* Optional: Ensure your site sections don't have solid white backgrounds blocking the view */
 .site-content, .elementor-section {
     background: transparent !important;
 }
@@ -24,14 +24,14 @@
 particlesJS("particles-js", {
   "particles": {
     "number": {
-      "value": 80, /* Density of particles */
+      "value": 80,
       "density": {
         "enable": true,
         "value_area": 800
       }
     },
     "color": {
-      "value": "#1f6db3" /* Your Brand Color */
+      "value": "#1f6db3"
     },
     "shape": {
       "type": "circle",
@@ -57,13 +57,13 @@ particlesJS("particles-js", {
     "line_linked": {
       "enable": true,
       "distance": 150,
-      "color": "#1f6db3", /* Line colors */
+      "color": "#1f6db3",
       "opacity": 0.3,
       "width": 1
     },
     "move": {
       "enable": true,
-      "speed": 2, /* Floating speed */
+      "speed": 2,
       "direction": "none",
       "random": false,
       "straight": false,
@@ -77,27 +77,41 @@ particlesJS("particles-js", {
     }
   },
   "interactivity": {
-    "detect_on": "canvas",
+    "detect_on": "window", /* Changed from 'canvas' to 'window' so it tracks mouse through content */
     "events": {
       "onhover": {
         "enable": true,
-        "mode": "grab" /* Particles will link to your mouse on hover */
+        "mode": ["grab", "bubble"] /* Added bubble for more visual feedback */
       },
       "onclick": {
         "enable": true,
-        "mode": "push" /* Adds more particles on click */
+        "mode": "push"
       },
       "resize": true
     },
     "modes": {
       "grab": {
-        "distance": 140,
+        "distance": 200,
         "line_linked": {
           "opacity": 1
         }
       },
+      "bubble": {
+        "distance": 200,
+        "size": 6, /* Particles grow to 6px when hovered */
+        "duration": 2,
+        "opacity": 0.8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 200,
+        "duration": 0.4
+      },
       "push": {
         "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
       }
     }
   },
