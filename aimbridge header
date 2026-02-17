@@ -63,7 +63,6 @@
     justify-content: space-between;
     width: 100%;
     max-width: 1150px; 
-    /* SLIGHTLY INCREASED VERTICAL PADDING (from 8px to 11px) */
     padding: 11px 30px; 
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
@@ -74,7 +73,7 @@
 }
 
 .header-logo img { 
-    height: 42px; /* Restored slightly larger size to match padding */
+    height: 42px; 
     width: auto; 
     display: block;
 }
@@ -94,7 +93,7 @@
     font-size: 15px; 
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.2px;
-    transition: color 0.3s ease;
+    transition: color 0.3s architecture;
 }
 
 .nav-link-item:hover { color: var(--brand-blue); }
@@ -143,15 +142,18 @@
 
 /* --- RESPONSIVE FIXES --- */
 
+/* Tablet & Mobile (Standardizing behavior for both) */
 @media (max-width: 1024px) {
     .nav-menu { display: none; }
     .mobile-toggle { display: flex; }
-    .header-cta { display: inline-block; } 
+    
+    /* Hiding the Book Now button in the header for Tablet & Mobile */
+    .header-right .header-cta { display: none !important; } 
+    
     .header-pill { width: 95%; padding: 10px 20px; }
 }
 
 @media (max-width: 650px) {
-    .header-cta { display: none !important; } 
     #aimbridge-custom-header { top: 8px; }
     .header-logo img { height: 34px; }
 }
