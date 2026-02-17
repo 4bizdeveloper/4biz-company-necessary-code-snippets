@@ -10,10 +10,11 @@
             <li><a href="/" class="nav-link-item">🏠 HOME</a></li>
             <li><a href="#aboutus" class="nav-link-item">📜 ABOUT US</a></li>
             <li><a href="/#contact" class="nav-link-item">☎️ CONTACT US</a></li>
+			<li><a href="#book" class="nav-link-item ">🎓 APPLY NOW</a></li>
         </ul>
 
         <div class="header-right">
-            <a href="#book" class="cta-pill-button header-cta sliding-horizontal">🎫 BOOK NOW!</a>
+            <a href="#" class="cta-pill-button header-cta sliding-horizontal open-tji-popup">🎫 BOOK NOW!</a>
             <div class="mobile-toggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
@@ -25,11 +26,12 @@
     <div id="mobile-sidebar" class="sidebar">
         <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
         <div class="sidebar-links">
-            <a href="/" onclick="toggleMobileMenu()">Home</a>
-            <a href="#aboutus" onclick="toggleMobileMenu()">About Us</a>
-            <a href="/#contact" onclick="toggleMobileMenu()">Contact Us</a>
+            <a href="/" onclick="toggleMobileMenu()">🏠 Home</a>
+            <a href="#aboutus" onclick="toggleMobileMenu()">📜 About Us</a>
+            <a href="/#contact" onclick="toggleMobileMenu()">☎️ Contact Us</a>
+			<a href="#book" class="nav-link-item ">🎓 APPLY NOW</a>
             <div style="padding: 25px 32px;">
-                <a href="#book" class="cta-pill-button sliding-horizontal" style="display: block; text-align: center;">Book Now</a>
+                <a href="#" class="cta-pill-button sliding-horizontal open-tji-popup" style="display: block; text-align: center;">Book Now</a>
             </div>
         </div>
     </div>
