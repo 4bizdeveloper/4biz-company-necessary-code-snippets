@@ -1,0 +1,178 @@
+<header id="aimbridge-custom-header">
+    <nav class="header-pill">
+        <div class="header-logo">
+            <a href="https://new.aimbridgeeducation.com/">
+                <img src="https://new.aimbridgeeducation.com/wp-content/uploads/2026/02/aimbridge-logo-1-scaled.png" alt="Aimbridge Education">
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="/" class="nav-link-item">🏠 HOME</a></li>
+            <li><a href="#aboutus" class="nav-link-item">📜 ABOUT US</a></li>
+            <li><a href="/#contact" class="nav-link-item">☎️ CONTACT US</a></li>
+        </ul>
+
+        <div class="header-right">
+            <a href="#book" class="cta-pill-button sliding-pulse-motion">🎫 BOOK NOW!</a>
+            <div class="mobile-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <div id="mobile-sidebar" class="sidebar">
+        <div class="close-btn" onclick="toggleMobileMenu()">&times;</div>
+        <a href="/" onclick="toggleMobileMenu()">Home</a>
+        <a href="/about-us" onclick="toggleMobileMenu()">About Us</a>
+        <a href="/contact-us" onclick="toggleMobileMenu()">Contact Us</a>
+        <div style="padding: 25px 32px;">
+            <a href="#" class="cta-pill-button" style="display: block; text-align: center;">Book Now</a>
+        </div>
+    </div>
+</header>
+
+<style>
+:root {
+    /* Updated to your specific brand blue */
+    --brand-blue: #1f6db3;
+    --glass-bg: rgba(255, 255, 255, 0.98);
+}
+
+#aimbridge-custom-header {
+    position: fixed;
+    top: 25px; 
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Clear WP Admin Bar */
+.admin-bar #aimbridge-custom-header {
+    top: 55px;
+}
+
+.header-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px; 
+    padding: 14px 35px; 
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.7);
+}
+
+.header-logo img {
+    height: 48px; 
+    width: auto;
+    display: block;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 40px; 
+}
+
+.nav-link-item {
+    text-decoration: none;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 17px; 
+    transition: color 0.3s ease;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.nav-link-item:hover { color: var(--brand-blue); }
+
+/* Sliding Button with Updated Shadows */
+.cta-pill-button {
+    background: var(--brand-blue);
+    color: #fff !important;
+    padding: 14px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 16px;
+    display: inline-block;
+    border: none;
+    position: relative;
+    /* Updated shadow color */
+    box-shadow: 0 6px 15px rgba(31, 109, 179, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Updated slidingPulse with #1f6db3 (31, 109, 179) */
+@keyframes slidingPulse {
+  0% { 
+    transform: translateX(0px);
+    box-shadow: 0 0 0 0 rgba(31, 109, 179, 0.6);
+  }
+  50% { 
+    transform: translateX(10px); 
+    box-shadow: 0 0 0 12px rgba(31, 109, 179, 0); 
+  }
+  100% { 
+    transform: translateX(0px);
+    box-shadow: 0 0 0 0 rgba(31, 109, 179, 0);
+  }
+}
+
+.sliding-pulse-motion {
+    animation: slidingPulse 2.8s ease-in-out infinite;
+}
+
+.sliding-pulse-motion:hover {
+    animation-play-state: paused;
+    transform: scale(1.05) translateX(0);
+    box-shadow: 0 8px 25px rgba(31, 109, 179, 0.5);
+}
+
+/* Mobile Setup */
+.mobile-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; }
+.mobile-toggle span { width: 28px; height: 3px; background: #1a1a1a; }
+
+.sidebar {
+    height: 100%; width: 0; position: fixed; z-index: 1000000;
+    top: 0; right: 0; background-color: #ffffff;
+    transition: 0.5s; padding-top: 80px; overflow-x: hidden;
+}
+
+.sidebar a { padding: 20px 35px; text-decoration: none; font-size: 20px; color: #1a1a1a; display: block; font-weight: 700; }
+.sidebar .close-btn { position: absolute; top: 25px; right: 35px; font-size: 40px; cursor: pointer; }
+
+@media (max-width: 991px) {
+    .nav-menu { display: none; }
+    .mobile-toggle { display: flex; }
+    .header-pill { padding: 10px 25px; width: 94%; }
+}
+
+@media (max-width: 600px) {
+    .header-logo img { height: 38px; }
+    .cta-pill-button { display: none; }
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+function toggleMobileMenu() {
+    const sidebar = document.getElementById("mobile-sidebar");
+    sidebar.style.width = sidebar.style.width === "280px" ? "0" : "280px";
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    gsap.from(".header-pill", { y: -120, opacity: 0, duration: 1.4, ease: "expo.out" });
+});
+</script>
