@@ -1,0 +1,95 @@
+<div id="aimbridge-3d-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: #0a0a0a;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('aimbridge-3d-bg');
+    
+    // Setup Three.js Scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Create Particles (Professional Mesh)
+    const particlesCount = 1500;
+    const posArray = new Float32Array(particlesCount * 3);
+    
+    for(let i=0; i < particlesCount * 3; i++) {
+        posArray[i] = (Math.random() - 0.5) * 10;
+    }
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    // Styling the Particles (Aimbridge Blue/White Palette)
+    const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.008,
+        color: '#007bff', // Professional Blue
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+    });
+
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particlesMesh);
+    camera.position.z = 3;
+
+    // Mouse Hover Interaction Logic
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (event) => {
+        // Normalize mouse coordinates (-0.5 to 0.5)
+        mouseX = (event.clientX / window.innerWidth) - 0.5;
+        mouseY = (event.clientY / window.innerHeight) - 0.5;
+
+        // GSAP smooth follow effect
+        gsap.to(particlesMesh.rotation, {
+            y: mouseX * 0.5,
+            x: -mouseY * 0.5,
+            duration: 1.5,
+            ease: "power2.out"
+        });
+    });
+
+    // Handle Window Resize
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation Loop
+    const animate = () => {
+        requestAnimationFrame(animate);
+        
+        // Constant subtle auto-rotation
+        particlesMesh.rotation.y += 0.001;
+        particlesMesh.rotation.x += 0.0005;
+
+        renderer.render(scene, camera);
+    };
+
+    animate();
+});
+</script>
+
+<style>
+/* Ensure the website content stays readable */
+#aimbridge-3d-bg canvas {
+    display: block;
+}
+/* Optional: Soft gradient overlay for professional feel */
+#aimbridge-3d-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.4) 100%);
+}
+</style>
