@@ -1,0 +1,185 @@
+<div class="opus-fab-container">
+    <div class="opus-menu-stack" id="opusMenu">
+        <div class="opus-btn-wrapper">
+            <span class="opus-tooltip">WhatsApp Us</span>
+            <a href="https://wa.me/971508265672?text=Hello!%20I%20would%20like%20to%20inquire%20about%20your%20services." 
+               target="_blank" class="opus-btn glass-wa pulse-wa">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+
+        <div class="opus-btn-wrapper">
+            <span class="opus-tooltip">Call Support</span>
+            <a href="tel:+971508265672" class="opus-btn glass-brand pulse-brand">
+                <i class="fas fa-phone-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="opus-btn-wrapper">
+        <span class="opus-tooltip">Contact Us</span>
+        <button class="opus-btn-main glass-brand pulse-brand" id="opusToggle">
+            <i class="fas fa-plus opus-icon-plus"></i>
+        </button>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+    --brand-color: rgba(41, 136, 192, 0.85);
+    --wa-color: rgba(37, 211, 102, 0.85);
+    --glass-stroke: rgba(255, 255, 255, 0.4);
+    --animation-speed: 2.2s;
+}
+
+.opus-fab-container {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align to left for tooltip space */
+}
+
+/* Wrapper for Tooltip logic */
+.opus-btn-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Modern Glass Tooltip */
+.opus-tooltip {
+    position: absolute;
+    left: 85px; /* Appears to the right of the button */
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-15px);
+    transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    border: 1px solid var(--glass-stroke);
+}
+
+.opus-btn-wrapper:hover .opus-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Base Button Styling */
+.opus-btn, .opus-btn-main {
+    position: relative;
+    border: 1.5px solid var(--glass-stroke);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* Sizes */
+.opus-btn-main {
+    width: 72px;
+    height: 72px;
+    font-size: 28px;
+    background: var(--brand-color);
+    z-index: 10;
+}
+
+.opus-btn {
+    width: 66px;
+    height: 66px;
+    text-decoration: none;
+    font-size: 26px;
+    background: var(--brand-color);
+}
+
+.glass-wa { background: var(--wa-color); }
+
+/* Menu Stack Animation */
+.opus-menu-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 25px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(40px) scale(0.4);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.opus-fab-container.is-active .opus-menu-stack {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+/* The Perpetual Pulse (Always Active) */
+.pulse-brand::after, .pulse-wa::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.pulse-brand::after {
+    border: 4px solid var(--brand-color);
+    animation: perpetual-pulse var(--animation-speed) infinite;
+}
+
+.pulse-wa::after {
+    border: 4px solid var(--wa-color);
+    animation: perpetual-pulse var(--animation-speed) infinite;
+}
+
+@keyframes perpetual-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* Icon Rotation */
+.opus-icon-plus { 
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
+}
+.is-active .opus-icon-plus { transform: rotate(135deg); }
+
+/* Hover Scale */
+.opus-btn:hover, .opus-btn-main:hover {
+    transform: scale(1.1);
+    filter: brightness(1.1);
+}
+</style>
+
+<script>
+(function() {
+    const container = document.querySelector('.opus-fab-container');
+    const toggle = document.getElementById('opusToggle');
+
+    toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        container.classList.toggle('is-active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!container.contains(e.target)) {
+            container.classList.remove('is-active');
+        }
+    });
+})();
+</script>
