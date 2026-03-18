@@ -19,7 +19,7 @@
     --brand-dark: #b5121a;
     --white:      #ffffff;
     --black:      #0a0a0a;
-    --dur:        5000ms;
+    --dur:        3500ms;
     --trans:      850ms cubic-bezier(0.77, 0, 0.175, 1);
     font-family: 'Barlow', sans-serif;
     position: relative;
@@ -504,7 +504,7 @@
       <div class="ar-slide-overlay"></div>
       <div class="ar-slide-slab"></div>
       <div class="ar-slide-content">
-        <span class="ar-slide-tag">Since 1986 · UAE</span>
+        <span class="ar-slide-tag">Since 1986 &middot; UAE</span>
         <h2 class="ar-slide-title">
           39 Years of<br>
           <em>Leadership</em> in<br>
@@ -530,7 +530,7 @@
       <div class="ar-slide-overlay"></div>
       <div class="ar-slide-slab"></div>
       <div class="ar-slide-content">
-        <span class="ar-slide-tag">Complete Fit-Outs · GCC</span>
+        <span class="ar-slide-tag">Complete Fit-Outs &middot; GCC</span>
         <h2 class="ar-slide-title">
           Your Vision,<br>
           Our <em>Precision:</em><br>
@@ -556,7 +556,7 @@
       <div class="ar-slide-overlay"></div>
       <div class="ar-slide-slab"></div>
       <div class="ar-slide-content">
-        <span class="ar-slide-tag">Innovation · Precision</span>
+        <span class="ar-slide-tag">Innovation &middot; Precision</span>
         <h2 class="ar-slide-title">
           Smart Solutions<br>
           for <em>Professional</em><br>
@@ -593,62 +593,113 @@
 
 <script>
 (function () {
-  var INTERVAL = 3500;
+  var INTERVAL   = 3500;
+  var slides     = document.querySelectorAll('#arSlider .ar-slide');
+  var dots       = document.querySelectorAll('#arSlider .ar-dot');
+  var progress   = document.getElementById('arProgress');
+  var current    = 0;
+  var timer      = null;
+  var running    = false; /* true = autoslide is active */
 
-  var slides   = document.querySelectorAll('#arSlider .ar-slide');
-  var dots     = document.querySelectorAll('#arSlider .ar-dot');
-  var progress = document.getElementById('arProgress');
-  var current  = 0;
-  var timer    = null;
-
-  function goTo(index) {
+  /* ── navigate to a slide, optionally restart the progress bar ── */
+  function goTo(index, restartProgress) {
     slides[current].classList.remove('active');
     dots[current].classList.remove('active');
-
     current = (index + slides.length) % slides.length;
     slides[current].classList.add('active');
     dots[current].classList.add('active');
 
-    progress.style.animation = 'none';
-    void progress.offsetHeight;
-    progress.style.animation  = 'progressBar ' + (INTERVAL / 1000) + 's linear infinite';
+    if (restartProgress) {
+      progress.style.animation = 'none';
+      void progress.offsetHeight;
+      progress.style.animation = 'progressBar ' + (INTERVAL / 1000) + 's linear forwards';
+    } else {
+      /* freeze bar */
+      progress.style.animation = 'none';
+    }
   }
 
+  /* ── start autoslide ── */
   function startAuto() {
     clearInterval(timer);
-    timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
+    running = true;
+    /* restart progress bar */
+    progress.style.animation = 'none';
+    void progress.offsetHeight;
+    progress.style.animation = 'progressBar ' + (INTERVAL / 1000) + 's linear forwards';
+
+    timer = setInterval(function () {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      /* restart bar for next slide */
+      progress.style.animation = 'none';
+      void progress.offsetHeight;
+      progress.style.animation = 'progressBar ' + (INTERVAL / 1000) + 's linear forwards';
+    }, INTERVAL);
   }
 
+  /* ── stop autoslide ── */
+  function stopAuto() {
+    clearInterval(timer);
+    timer   = null;
+    running = false;
+    progress.style.animation = 'none'; /* freeze bar */
+  }
+
+  /* ── toggle on any user interaction ── */
+  function handleInteraction(navigateFn) {
+    if (navigateFn) navigateFn();   /* do navigation first if any */
+    if (running) {
+      stopAuto();
+    } else {
+      startAuto();
+    }
+  }
+
+  /* ── ARROW BUTTONS ── */
   document.getElementById('arNext').addEventListener('click', function () {
-    goTo(current + 1); startAuto();
+    handleInteraction(function () { goTo(current + 1, false); });
   });
   document.getElementById('arPrev').addEventListener('click', function () {
-    goTo(current - 1); startAuto();
+    handleInteraction(function () { goTo(current - 1, false); });
   });
 
+  /* ── DOTS ── */
   dots.forEach(function (dot) {
     dot.addEventListener('click', function () {
-      goTo(parseInt(this.getAttribute('data-dot'))); startAuto();
+      var idx = parseInt(this.getAttribute('data-dot'));
+      handleInteraction(function () { goTo(idx, false); });
     });
   });
 
+  /* ── TOUCH / SWIPE ── */
   var touchStartX = 0;
+  var touchStartY = 0;
   var slider = document.getElementById('arSlider');
 
   slider.addEventListener('touchstart', function (e) {
     touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
   slider.addEventListener('touchend', function (e) {
-    var diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 35) {
-      goTo(diff > 0 ? current + 1 : current - 1);
-      startAuto();
+    var dx = touchStartX - e.changedTouches[0].clientX;
+    var dy = touchStartY - e.changedTouches[0].clientY;
+
+    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+      /* horizontal swipe — navigate + toggle */
+      var dir = dx > 0 ? 1 : -1;
+      handleInteraction(function () { goTo(current + dir, false); });
+    } else if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+      /* clean tap — toggle only */
+      handleInteraction(null);
     }
   }, { passive: true });
 
-  /* autoslide never pauses on hover */
-
+  /* ── kick off ── */
   startAuto();
 })();
 </script>
