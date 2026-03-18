@@ -1,0 +1,654 @@
+<!-- AL RUMOOZ HERO BANNER SLIDER — Divi HTML Widget Code -->
+<!-- Paste everything below into a Divi Code Module / HTML Widget -->
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap');
+
+  /* ── RESET ── */
+  .ar-hero-wrap *,
+  .ar-hero-wrap *::before,
+  .ar-hero-wrap *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── ROOT VARIABLES ── */
+  .ar-hero-wrap {
+    --brand:      #ed1b24;
+    --brand-dark: #b5121a;
+    --white:      #ffffff;
+    --black:      #0a0a0a;
+    --dur:        5000ms;
+    --trans:      850ms cubic-bezier(0.77, 0, 0.175, 1);
+    font-family: 'Barlow', sans-serif;
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    margin-left: -50vw;
+    overflow: hidden;
+    background: var(--black);
+    display: block;
+  }
+
+  /* ══════════════════════════════════
+     SLIDER — aspect-ratio per breakpoint
+  ══════════════════════════════════ */
+  .ar-slider {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 3 / 1;
+    min-height: 220px;
+  }
+
+  @media (max-width: 1024px) {
+    .ar-slider { aspect-ratio: 2 / 1; }
+  }
+
+  @media (max-width: 767px) {
+    .ar-slider {
+      aspect-ratio: unset;
+      height: 56vw;
+      min-height: 260px;
+      max-height: 420px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ar-slider {
+      height: 62vw;
+      min-height: 240px;
+      max-height: 360px;
+    }
+  }
+
+  /* ── SLIDES ── */
+  .ar-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--trans);
+    pointer-events: none;
+  }
+
+  .ar-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── IMAGE ── */
+  .ar-slide-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.06);
+    transition: transform 7000ms ease;
+    will-change: transform;
+    display: block;
+  }
+
+  .ar-slide.active .ar-slide-img {
+    transform: scale(1);
+  }
+
+  /* ── OVERLAY — light center, enough contrast for text only ── */
+  .ar-slide-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.05) 0%,
+      rgba(0,0,0,0.32) 40%,
+      rgba(0,0,0,0.38) 60%,
+      rgba(0,0,0,0.08) 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(0,0,0,0.06) 0%,
+      rgba(0,0,0,0.28) 30%,
+      rgba(0,0,0,0.28) 70%,
+      rgba(0,0,0,0.06) 100%
+    );
+  }
+
+  /* ── DECORATIVE GRID ── */
+  .ar-grid-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ar-grid-lines::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ── RED ACCENT SLAB (bottom) ── */
+  .ar-slide-slab {
+    position: absolute;
+    bottom: 0;
+    left: -4%;
+    width: 52%;
+    height: 5px;
+    background: var(--brand);
+    transform: skewX(-18deg);
+    transform-origin: left bottom;
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    transition-delay: 0.5s;
+  }
+
+  .ar-slide.active .ar-slide-slab {
+    opacity: 1;
+  }
+
+  @media (max-width: 767px) {
+    .ar-slide-slab { width: 72%; height: 4px; }
+  }
+
+  /* ══════════════════════════════════
+     SLIDE CONTENT — CENTERED
+  ══════════════════════════════════ */
+  .ar-slide-content {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* vertical center */
+    align-items: center;       /* horizontal center */
+    text-align: center;        /* text center */
+    padding: 0 8% 4% 8%;
+  }
+
+  @media (max-width: 1024px) {
+    .ar-slide-content {
+      padding: 0 6% 5% 6%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ar-slide-content {
+      padding: 12px 16px 28px 16px;
+    }
+  }
+
+  /* ── TAG LINE ── */
+  .ar-slide-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--brand);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: 0.15s;
+    font-size: clamp(0.56rem, 1.1vw, 0.82rem);
+    margin-bottom: clamp(4px, 0.8vw, 12px);
+    white-space: nowrap;
+  }
+
+  .ar-slide.active .ar-slide-tag {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Red lines on both sides of tag */
+  .ar-slide-tag::before,
+  .ar-slide-tag::after {
+    content: '';
+    display: inline-block;
+    width: clamp(14px, 2vw, 26px);
+    height: 2px;
+    background: var(--brand);
+    flex-shrink: 0;
+  }
+
+  /* ── TITLE ── */
+  .ar-slide-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    line-height: 1.0;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.1rem, 3.8vw, 3.8rem);
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition-delay: 0.28s;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  .ar-slide.active .ar-slide-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ar-slide-title em {
+    font-style: normal;
+    color: var(--brand);
+  }
+
+  @media (max-width: 1024px) {
+    .ar-slide-title {
+      font-size: clamp(1.2rem, 3.5vw, 2.8rem);
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .ar-slide-title {
+      font-size: clamp(1.1rem, 5.5vw, 2rem);
+      line-height: 1.05;
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ar-slide-title {
+      font-size: clamp(1rem, 5.8vw, 1.6rem);
+    }
+  }
+
+  /* ── CTA BUTTON ── */
+  .ar-slide-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none !important;
+    border: 1.5px solid rgba(255,255,255,0.35);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+    transition-delay: 0.42s;
+    align-self: center;        /* centered horizontally */
+    z-index: 0;
+    cursor: pointer;
+    font-size: clamp(0.58rem, 1.2vw, 0.88rem);
+    padding: clamp(5px, 0.9vw, 10px) clamp(10px, 1.8vw, 22px);
+    margin-top: clamp(6px, 1.4vw, 18px);
+  }
+
+  .ar-slide.active .ar-slide-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ar-slide-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--brand);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.77, 0, 0.175, 1);
+    z-index: -1;
+  }
+
+  .ar-slide-cta:hover {
+    border-color: var(--brand) !important;
+    color: var(--white) !important;
+    text-decoration: none !important;
+  }
+
+  .ar-slide-cta:hover::before { transform: scaleX(1); }
+
+  .ar-slide-cta svg {
+    width: clamp(10px, 1.3vw, 15px);
+    height: clamp(10px, 1.3vw, 15px);
+    stroke: var(--white);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.28s ease;
+    flex-shrink: 0;
+  }
+
+  .ar-slide-cta:hover svg { transform: translateX(3px); }
+
+  @media (max-width: 767px) {
+    .ar-slide-cta {
+      font-size: clamp(0.62rem, 3vw, 0.78rem);
+      padding: 5px 12px;
+      margin-top: 8px;
+      gap: 6px;
+    }
+    .ar-slide-cta svg { width: 11px; height: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    .ar-slide-cta {
+      font-size: 0.62rem;
+      padding: 5px 10px;
+    }
+  }
+
+  /* ── SLIDE NUMBER ── */
+  .ar-slide-number {
+    position: absolute;
+    right: 4%;
+    bottom: 18%;
+    z-index: 4;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(0.55rem, 1vw, 0.75rem);
+    color: rgba(255,255,255,0.32);
+    letter-spacing: 0.1em;
+  }
+
+  .ar-slide-number span {
+    color: var(--brand);
+    font-weight: 700;
+    font-size: clamp(0.78rem, 1.4vw, 1rem);
+  }
+
+  @media (max-width: 767px) {
+    .ar-slide-number { display: none; }
+  }
+
+  /* ══════════════════════════════════
+     NAVIGATION ARROWS
+  ══════════════════════════════════ */
+  .ar-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border: 1.5px solid rgba(255,255,255,0.28);
+    background: rgba(0,0,0,0.32);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    width:  clamp(28px, 3.8vw, 52px);
+    height: clamp(28px, 3.8vw, 52px);
+  }
+
+  .ar-arrow:hover {
+    background: var(--brand);
+    border-color: var(--brand);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .ar-arrow svg {
+    stroke: var(--white);
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    width:  clamp(11px, 1.5vw, 19px);
+    height: clamp(11px, 1.5vw, 19px);
+  }
+
+  .ar-arrow-prev { left:  clamp(8px, 1.8vw, 24px); }
+  .ar-arrow-next { right: clamp(8px, 1.8vw, 24px); }
+
+  @media (max-width: 480px) {
+    .ar-arrow { width: 28px; height: 28px; }
+    .ar-arrow svg { width: 11px; height: 11px; }
+    .ar-arrow-prev { left:  6px; }
+    .ar-arrow-next { right: 6px; }
+  }
+
+  /* ══════════════════════════════════
+     DOTS
+  ══════════════════════════════════ */
+  .ar-dots {
+    position: absolute;
+    bottom: clamp(6px, 1.6vw, 16px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: clamp(4px, 0.7vw, 9px);
+    align-items: center;
+  }
+
+  .ar-dot {
+    height: 2.5px;
+    background: rgba(255,255,255,0.28);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: width 0.35s ease;
+    width: clamp(16px, 2.2vw, 30px);
+  }
+
+  .ar-dot.active {
+    background: rgba(255,255,255,0.18);
+    width: clamp(28px, 4vw, 52px);
+  }
+
+  .ar-dot-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--brand);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .ar-dot.active .ar-dot-fill {
+    animation: dotFill var(--dur) linear forwards;
+  }
+
+  @keyframes dotFill { to { transform: scaleX(1); } }
+
+  /* ── PROGRESS BAR ── */
+  .ar-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--brand);
+    z-index: 11;
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: progressBar var(--dur) linear infinite;
+  }
+
+  @keyframes progressBar {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+</style>
+
+<div class="ar-hero-wrap">
+  <div class="ar-slider" id="arSlider">
+
+    <!-- Decorative grid -->
+    <div class="ar-grid-lines"></div>
+
+    <!-- ═══════ SLIDE 1 ═══════ -->
+    <div class="ar-slide active" data-index="0">
+      <img
+        class="ar-slide-img"
+        src="https://www.alrumooz.com/wp-content/uploads/2026/03/Untitled-design-25.webp"
+        alt="39 Years of Leadership in Commercial Equipment"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <div class="ar-slide-overlay"></div>
+      <div class="ar-slide-slab"></div>
+      <div class="ar-slide-content">
+        <span class="ar-slide-tag">Since 1986 · UAE</span>
+        <h2 class="ar-slide-title">
+          39 Years of<br>
+          <em>Leadership</em> in<br>
+          Commercial Equipment.
+        </h2>
+        <a href="https://www.alrumooz.com/products/" class="ar-slide-cta">
+          Explore Products
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+      <div class="ar-slide-number"><span>01</span> / 03</div>
+    </div>
+
+    <!-- ═══════ SLIDE 2 ═══════ -->
+    <div class="ar-slide" data-index="1">
+      <img
+        class="ar-slide-img"
+        src="https://www.alrumooz.com/wp-content/uploads/2026/03/Untitled-design-25.webp"
+        alt="Your Vision Our Precision Complete Commercial Fit-Outs"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="ar-slide-overlay"></div>
+      <div class="ar-slide-slab"></div>
+      <div class="ar-slide-content">
+        <span class="ar-slide-tag">Complete Fit-Outs · GCC</span>
+        <h2 class="ar-slide-title">
+          Your Vision,<br>
+          Our <em>Precision:</em><br>
+          Complete Commercial Fit-Outs.
+        </h2>
+        <a href="https://www.alrumooz.com/services/" class="ar-slide-cta">
+          Our Services
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+      <div class="ar-slide-number"><span>02</span> / 03</div>
+    </div>
+
+    <!-- ═══════ SLIDE 3 ═══════ -->
+    <div class="ar-slide" data-index="2">
+      <img
+        class="ar-slide-img"
+        src="https://www.alrumooz.com/wp-content/uploads/2026/03/Untitled-design-25.webp"
+        alt="Smart Solutions for Professional Environments"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="ar-slide-overlay"></div>
+      <div class="ar-slide-slab"></div>
+      <div class="ar-slide-content">
+        <span class="ar-slide-tag">Innovation · Precision</span>
+        <h2 class="ar-slide-title">
+          Smart Solutions<br>
+          for <em>Professional</em><br>
+          Environments.
+        </h2>
+        <a href="https://www.alrumooz.com/contact/" class="ar-slide-cta">
+          Get In Touch
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+      <div class="ar-slide-number"><span>03</span> / 03</div>
+    </div>
+
+    <!-- ═══════ ARROWS ═══════ -->
+    <button class="ar-arrow ar-arrow-prev" id="arPrev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="ar-arrow ar-arrow-next" id="arNext" aria-label="Next slide">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- ═══════ DOTS ═══════ -->
+    <div class="ar-dots" id="arDots">
+      <div class="ar-dot active"  data-dot="0"><div class="ar-dot-fill"></div></div>
+      <div class="ar-dot"         data-dot="1"><div class="ar-dot-fill"></div></div>
+      <div class="ar-dot"         data-dot="2"><div class="ar-dot-fill"></div></div>
+    </div>
+
+    <!-- ═══════ PROGRESS BAR ═══════ -->
+    <div class="ar-progress" id="arProgress"></div>
+
+  </div>
+</div>
+
+<script>
+(function () {
+  var INTERVAL = 3500;
+
+  var slides   = document.querySelectorAll('#arSlider .ar-slide');
+  var dots     = document.querySelectorAll('#arSlider .ar-dot');
+  var progress = document.getElementById('arProgress');
+  var current  = 0;
+  var timer    = null;
+
+  function goTo(index) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+
+    progress.style.animation = 'none';
+    void progress.offsetHeight;
+    progress.style.animation  = 'progressBar ' + (INTERVAL / 1000) + 's linear infinite';
+  }
+
+  function startAuto() {
+    clearInterval(timer);
+    timer = setInterval(function () { goTo(current + 1); }, INTERVAL);
+  }
+
+  document.getElementById('arNext').addEventListener('click', function () {
+    goTo(current + 1); startAuto();
+  });
+  document.getElementById('arPrev').addEventListener('click', function () {
+    goTo(current - 1); startAuto();
+  });
+
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(this.getAttribute('data-dot'))); startAuto();
+    });
+  });
+
+  var touchStartX = 0;
+  var slider = document.getElementById('arSlider');
+
+  slider.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  slider.addEventListener('touchend', function (e) {
+    var diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 35) {
+      goTo(diff > 0 ? current + 1 : current - 1);
+      startAuto();
+    }
+  }, { passive: true });
+
+  /* autoslide never pauses on hover */
+
+  startAuto();
+})();
+</script>
