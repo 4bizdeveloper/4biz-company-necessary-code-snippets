@@ -1,0 +1,147 @@
+<style>
+    .tji-whatsapp-wrapper {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    .tji-wa-btn {
+        width: 65px;
+        height: 65px;
+        background: linear-gradient(135deg, #1a1f36 0%, #3b4261 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(26, 31, 54, 0.4);
+        margin-left: 15px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        z-index: 10;
+        text-decoration: none;
+    }
+    .tji-wa-icon {
+        width: 35px;
+        fill: white;
+        transition: transform 0.3s ease;
+    }
+    .tji-wa-label {
+        background: white;
+        padding: 8px 16px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-right: 15px;
+        font-weight: 600;
+        color: #333;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+    .tji-whatsapp-wrapper:hover .tji-wa-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .tji-whatsapp-wrapper:hover .tji-wa-btn {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 10px 25px rgba(26, 31, 54, 0.4);
+    }
+    .tji-pulse-ring {
+        position: absolute;
+        right: 0;
+        width: 65px;
+        height: 65px;
+        background: #1a1f36;
+        border-radius: 50%;
+        z-index: 5;
+        animation: tji-pulse 2s infinite;
+    }
+    @keyframes tji-pulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* ── FOOTER MODE (swapped colors) ── */
+    .tji-whatsapp-wrapper.on-footer .tji-wa-btn {
+        background: linear-gradient(135deg, #ffffff 0%, #e8e8f0 100%);
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.4);
+    }
+    .tji-whatsapp-wrapper.on-footer .tji-pulse-ring {
+        background: #ffffff;
+    }
+    .tji-whatsapp-wrapper.on-footer .tji-wa-icon {
+        fill: #1a1f36;
+    }
+    .tji-whatsapp-wrapper.on-footer .tji-wa-label {
+        background: #1a1f36;
+        color: #ffffff;
+        box-shadow: 0 4px 15px rgba(26, 31, 54, 0.3);
+    }
+    .tji-whatsapp-wrapper.on-footer:hover .tji-wa-btn {
+        box-shadow: 0 10px 25px rgba(255, 255, 255, 0.5);
+    }
+
+    /* ── matches AI button breakpoints exactly ── */
+    @media (max-width: 768px) {
+        .tji-wa-label { display: none; }
+        .tji-whatsapp-wrapper { bottom: 20px; right: 20px; }
+        .tji-wa-btn { width: 55px; height: 55px; }
+        .tji-pulse-ring { width: 55px; height: 55px; }
+        .tji-wa-icon { width: 30px; }
+    }
+
+    @media (max-width: 480px) {
+        .tji-whatsapp-wrapper { bottom: 16px; right: 14px; }
+        .tji-wa-btn { width: 50px; height: 50px; }
+        .tji-pulse-ring { width: 50px; height: 50px; }
+        .tji-wa-icon { width: 27px; }
+    }
+</style>
+
+<div class="tji-whatsapp-wrapper" id="tjiWaWrapper">
+    <div class="tji-wa-label">Chat with Whatsapp</div>
+    <div class="tji-pulse-ring"></div>
+    <a href="https://wa.me/+971505248584?text=Hello! I'd like to inquire about your services." target="_blank" class="tji-wa-btn">
+        <svg viewBox="0 0 32 32" class="tji-wa-icon">
+            <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.48 2.025 7.78l-2.025 7.395 7.58-1.99c2.35 1.4 5.08 2.215 8.02 2.215 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.355c-2.585 0-4.99-.745-7.035-2.035l-.505-.315-4.485 1.175 1.2-4.385-.35-.555c-1.425-2.275-2.18-4.91-2.18-7.64 0-7.72 6.28-14 14-14s14 6.28 14 14-6.28 14-14 14zM22.9 19.33c-.385-.195-2.275-1.12-2.625-1.245s-.605-.195-.855.195-.975 1.245-1.195 1.5-.445.285-.83.09c-.385-.195-1.63-.6-3.105-1.915-1.145-1.025-1.92-2.29-2.145-2.675s-.025-.595.17-.79c.175-.175.385-.45.58-.675.19-.22.255-.385.385-.64s.065-.48-.035-.675-.855-2.065-1.17-2.825c-.305-.745-.615-.645-.855-.655s-.485-.015-.745-.015-.675.1-1.03.495c-.35.395-1.345 1.315-1.345 3.205s1.375 3.715 1.57 3.975c.195.255 2.705 4.13 6.55 5.79.915.39 1.63.625 2.185.8 1.015.32 1.935.275 2.665.165.815-.12 2.275-.93 2.59-1.83.315-.895.315-1.66.22-1.825-.095-.175-.35-.275-.735-.47z"/>
+        </svg>
+    </a>
+</div>
+
+<script>
+    /* ── Scroll watcher for WhatsApp footer color swap ── */
+    (function () {
+        var waWrapper = document.getElementById('tjiWaWrapper');
+        var footerIds = ['footer-1', 'footer-2', 'footer-3'];
+
+        function isInFooter() {
+            var scrollBottom = window.scrollY + window.innerHeight;
+            for (var i = 0; i < footerIds.length; i++) {
+                var el = document.getElementById(footerIds[i]);
+                if (el) {
+                    var rect = el.getBoundingClientRect();
+                    var elTop = rect.top + window.scrollY;
+                    var elBottom = elTop + el.offsetHeight;
+                    if (scrollBottom > elTop && window.scrollY < elBottom) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function onScroll() {
+            if (isInFooter()) {
+                waWrapper.classList.add('on-footer');
+            } else {
+                waWrapper.classList.remove('on-footer');
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+</script>
