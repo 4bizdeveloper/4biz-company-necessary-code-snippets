@@ -1,0 +1,156 @@
+# ------------------------------------------------------------------------------
+# 1. COMPRESSION (GZIP + BROTLI if available)
+# ------------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json
+    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/ttf font/otf font/woff font/woff2 application/vnd.ms-fontobject
+</IfModule>
+
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript application/x-javascript application/json
+    AddOutputFilterByType BROTLI_COMPRESS application/xml application/xhtml+xml application/rss+xml
+    AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 2. AGGRESSIVE BROWSER CACHING (EXPIRES HEADERS)
+# ------------------------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+
+    # Assets - 1 Year (Maximum Score)
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/pdf "access plus 1 year"
+
+    # CSS & JS - 1 Year (Use versioning for updates)
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/manifest+json "access plus 1 year"
+
+    # Data - 0 Seconds (Do not cache dynamic content)
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 3. CACHE-CONTROL HEADERS (Fixes "Efficient Cache Policy")
+# ------------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # Long-cache static assets (use filename versioning when updating)
+    <FilesMatch "\.(?:avif|css|eot|gif|ico|jpg|jpeg|js|map|otf|pdf|png|svg|ttf|webmanifest|webp|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # HTML should revalidate
+    <FilesMatch "\.(?:html)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+
+    Header append Vary "Accept-Encoding"
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 4. HTTPS & NON-WWW REDIRECTS
+# ------------------------------------------------------------------------------
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.theyyampattilgcc\.com [NC]
+RewriteRule ^(.*)$ https://theyyampattilgcc.com/$1 [L,R=301]
+
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ------------------------------------------------------------------------------
+# 5. PERFORMANCE & SECURITY
+# ------------------------------------------------------------------------------
+# Keep-Alive is controlled by the web server; don't force Connection headers here.
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "no-referrer-when-downgrade"
+</IfModule>
+
+# Disable Directory Browsing
+Options -Indexes
+
+
+
+
+
+# Bed Panels
+RewriteCond %{THE_REQUEST} \ /bedroom\.html\  [NC]
+RewriteRule ^bedroom\.html$ /product/luxurious-bed-panels [R=301,L]
+RewriteRule ^product/luxurious-bed-panels$ bedroom.html [L]
+
+# Walk-in Closet
+RewriteCond %{THE_REQUEST} \ /dressing\.html\  [NC]
+RewriteRule ^dressing\.html$ /custom-luxury-walk-in-closet-by-theyyampattil-furniture [R=301,L]
+RewriteRule ^custom-luxury-walk-in-closet-by-theyyampattil-furniture$ dressing.html [L]
+
+
+# TV Wall
+RewriteCond %{THE_REQUEST} \ /tvwall\.html\  [NC]
+RewriteRule ^tvwall\.html$ /product/modern-tv-wall-dubai [R=301,L]
+RewriteRule ^product/modern-tv-wall-dubai$ tvwall.html [L] 
+
+
+# Home / Luxury Furniture
+RewriteCond %{THE_REQUEST} \ /home\.html\  [NC]
+RewriteRule ^home\.html$ /luxury-furniture-dubai [R=301,L]
+RewriteRule ^luxury-furniture-dubai$ home.html [L]
+
+
+# Kitchen Units
+RewriteCond %{THE_REQUEST} \ /kitchen-unit\.html\  [NC]
+RewriteRule ^kitchen-unit\.html$ /product/modern-luxury-kitchen-furniture-dubai [R=301,L]
+RewriteRule ^product/modern-luxury-kitchen-furniture-dubai$ kitchen-unit.html [L]
+
+
+# Kids Wall Panels 
+RewriteCond %{THE_REQUEST} \ /kids\.html\  [NC]
+RewriteRule ^kids\.html$ /wall-panels [R=301,L]
+RewriteRule ^wall-panels$ kids.html [L]
+
+
+
+# redirect a url
+Redirect 301 /product/luxury-kitchen-furniture-dubai https://theyyampattilgcc.com/product/modern-luxury-kitchen-furniture-dubai 
+
+
+
+
+
+
+
+
+
+# ------------------------------------------------------------------------------
+# REMOVE .HTML EXTENSION
+# ------------------------------------------------------------------------------
+
+# 1. Redirect external requests from /page.html to /page
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# 2. Internally map /page back to /page.html so the server can find the file
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*?)/?$ $1.html [L]
