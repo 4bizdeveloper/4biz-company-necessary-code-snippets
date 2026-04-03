@@ -1,20 +1,20 @@
 <header id="aimbridge-custom-header">
     <nav class="header-pill">
         <div class="header-logo">
-            <a href="https://new.aimbridgeeducation.com/">
-                <img src="https://new.aimbridgeeducation.com/wp-content/uploads/2026/02/aimbridge-logo-1-scaled.png" alt="Aimbridge Education">
+            <a href="/">
+                <img src="https://slategray-guanaco-863854.hostingersite.com/wp-content/uploads/2026/03/aimbridge-logo.png" alt="Aimbridge Education">
             </a>
         </div>
 
         <ul class="nav-menu">
             <li><a href="/" class="nav-link-item">🏠 HOME</a></li>
-            <li><a href="#aboutus" class="nav-link-item">📜 ABOUT US</a></li>
+            <li><a href="/about" class="nav-link-item">📜 ABOUT US</a></li>
             <li><a href="/#contact" class="nav-link-item">☎️ CONTACT US</a></li>
 			<li><a href="#book" class="nav-link-item ">🎓 APPLY NOW</a></li>
         </ul>
 
         <div class="header-right">
-            <a href="#" class="cta-pill-button header-cta sliding-horizontal open-tji-popup">🎫 BOOK NOW!</a>
+            <a href="https://new.aimbridgeeducation.com/#book" class="cta-pill-button header-cta sliding-horizontal open-tji-popup">🎫 BOOK NOW!</a>
             <div class="mobile-toggle" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
