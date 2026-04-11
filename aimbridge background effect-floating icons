@@ -1,0 +1,139 @@
+<div id="edu-animated-bg"></div>
+
+<style>
+/* 1. Background Setup */
+#edu-animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, #ffffff 0%, #f9faff 100%);
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* 2. Floating Icons Styling */
+.edu-icon {
+    position: absolute;
+    color: rgba(67, 97, 238, 0.12); /* Subtle for premium look */
+    user-select: none;
+    will-change: transform; /* Optimized for GPU */
+    font-family: serif; 
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.03));
+    /* Transition removed to eliminate jitter/stutter */
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .edu-icon { display: none; }
+}
+</style>
+
+<script>
+(function() {
+    const bgContainer = document.getElementById('edu-animated-bg');
+    const iconSymbol = '🎓';
+    // Balanced quantity: 15 for mobile, 25 for desktop
+    const iconCount = window.innerWidth < 768 ? 15 : 25; 
+    const elements = [];
+
+    let mouse = { x: -2000, y: -2000 };
+    const radius = 200; // Interaction zone
+
+    for (let i = 0; i < iconCount; i++) {
+        const el = document.createElement('div');
+        el.className = 'edu-icon';
+        el.innerText = iconSymbol;
+        
+        const data = {
+            el: el,
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            size: Math.random() * (2.2 - 1.2) + 1.2,
+            speed: Math.random() * 0.25 + 0.15, // Slow, consistent climb
+            drift: (Math.random() - 0.5) * 0.2, 
+            // Interaction offsets
+            interX: 0,
+            interY: 0
+        };
+        
+        el.style.fontSize = data.size + 'rem';
+        el.style.opacity = Math.random() * (0.4 - 0.15) + 0.15;
+        bgContainer.appendChild(el);
+        elements.push(data);
+    }
+
+    const updateMouse = (e) => {
+        const x = e.clientX || (e.touches && e.touches[0].clientX);
+        const y = e.clientY || (e.touches && e.touches[0].clientY);
+        mouse.x = x;
+        mouse.y = y;
+    };
+
+    window.addEventListener('mousemove', updateMouse);
+    window.addEventListener('touchstart', updateMouse, {passive: true});
+    window.addEventListener('touchmove', updateMouse, {passive: true});
+    window.addEventListener('mouseleave', () => { mouse.x = -2000; mouse.y = -2000; });
+
+    function animate() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+
+        elements.forEach((item) => {
+            // 1. Constant Upward Flow
+            item.y -= item.speed;
+            item.x += item.drift;
+
+            // 2. Seamless Screen Wrap (No "popping" in/out)
+            if (item.y < -100) {
+                item.y = h + 100;
+                item.x = Math.random() * w;
+            }
+            if (item.x < -100) item.x = w + 100;
+            if (item.x > w + 100) item.x = -100;
+
+            // 3. Smooth Repulsion Physics
+            const dx = item.x - mouse.x;
+            const dy = item.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            let targetX = 0;
+            let targetY = 0;
+
+            if (dist < radius) {
+                const force = (radius - dist) / radius;
+                targetX = (dx / dist) * force * 50; 
+                targetY = (dy / dist) * force * 50;
+            }
+
+            // LERP: Linear Interpolation (Secret to the "Smoothness")
+            // This slows down the repulsion so it feels fluid, not jerky
+            item.interX += (targetX - item.interX) * 0.06;
+            item.interY += (targetY - item.interY) * 0.06;
+
+            // 4. Final Rendering
+            const finalX = item.x + item.interX;
+            const finalY = item.y + item.interY;
+            const rotation = (item.drift * 20) + (item.interX * 0.5);
+
+            item.el.style.transform = `translate3d(${finalX}px, ${finalY}px, 0) rotate(${rotation}deg)`;
+        });
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Responsive adjustment without losing icons
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            elements.forEach(item => {
+                if (item.x > window.innerWidth) item.x = Math.random() * window.innerWidth;
+                if (item.y > window.innerHeight) item.y = Math.random() * window.innerHeight;
+            });
+        }, 200);
+    });
+})();
+</script>
